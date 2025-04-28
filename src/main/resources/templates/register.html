@@ -29,59 +29,52 @@
     </div>
 </nav>
 <!--login-->
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <div th:if="${param.exito}">
-                <div class="alert alert-info">
-                    Se registro exitosamente en la base de datos.
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="row w-100">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div th:if="${param.exito}">
+                        <div class="alert alert-success text-center">
+                            ¡Se registró exitosamente en la base de datos!
+                        </div>
+                    </div>
+                    <h2 class="text-center mb-4">Regístrate</h2>
+                    <form th:action="@{/register}" method="post" th:object="${user}">
+                        <div class="mb-3">
+                            <label for="firstNameUser" class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="firstNameUser" name="firstNameUser"
+                                   th:field="*{firstNameUser}" placeholder="Jhon" required autofocus>
+                        </div>
+                        <div class="mb-3">
+                            <label for="lastNameUser" class="form-label">Apellido:</label>
+                            <input type="text" class="form-control" id="lastNameUser" name="lastNameUser"
+                                   th:field="*{lastNameUser}" placeholder="Doe" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userName" class="form-label">Nombre de Usuario:</label>
+                            <input type="text" class="form-control" id="userName" name="userName"
+                                   th:field="*{userName}" placeholder="johndoe123" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailUser" class="form-label">Correo Electrónico:</label>
+                            <input type="email" class="form-control" id="emailUser" name="emailUser"
+                                   th:field="*{emailUser}" placeholder="jhon.doe@example.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="passwordUser" class="form-label">Contraseña:</label>
+                            <input type="password" class="form-control" id="passwordUser" name="passwordUser"
+                                   th:field="*{passwordUser}" placeholder="********" required>
+                        </div>
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary">Registrarme</button>
+                        </div>
+                        <div class="text-center">
+                            <span>¿Ya tienes cuenta? <a th:href="@{/login}">Iniciar Sesión</a></span>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <h1>Regístrate</h1>
-            <form th:action="@{/register}" method="post" th:object="${user}">
-                <div class="mb-3">
-                    <label for="firstNameUser" class="form-label">
-                        Nombre:
-                    </label>
-                    <input type="text" class="form-control" id="firstNameUser" name="firstNameUser"
-                           th:field="*{firstNameUser}"
-                           placeholder="Jhon Doe" required autofocus="autofocus">
-                </div>
-                <div class="mb-3">
-                    <label for="lastNameUser" class="form-label">
-                        Apellido:
-                    </label>
-                    <input type="text" class="form-control" id="lastNameUser" name="lastNameUser"
-                           th:field="*{lastNameUser}"
-                           placeholder="Doe" required>
-                </div>
-                <div class="mb-3">
-                    <label for="userName" class="form-label">
-                        Nombre de Usuario:
-                    </label>
-                    <input type="text" class="form-control" id="userName" name="userName" th:field="*{userName}"
-                           placeholder="johndoe123" required>
-                </div>
-                <div class="mb-3">
-                    <label for="emailUser" class="form-label">
-                        Correo Electrónico:
-                    </label>
-                    <input type="email" class="form-control" id="emailUser" name="emailUser" th:field="*{emailUser}"
-                           placeholder="jhon.doe@example.com" required>
-                </div>
-                <div class="mb-3">
-                    <label for="passwordUser" class="form-label">
-                        Contraseña:
-                    </label>
-                    <input type="password" class="form-control" id="passwordUser" name="passwordUser"
-                           th:field="*{passwordUser}"
-                           placeholder="********" required>
-                </div>
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">Registrarme</button>
-                    <span class="ms-2">¿Ya tienes cuenta? <a th:href="@{/login}">Iniciar Sesión</a></span>
-                </div>
-            </form>
         </div>
     </div>
 </div>
