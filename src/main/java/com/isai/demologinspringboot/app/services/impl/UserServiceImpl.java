@@ -8,7 +8,6 @@ import com.isai.demologinspringboot.app.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -29,6 +28,7 @@ public class UserServiceImpl
         UserEntity userEntity = new UserEntity();
         userEntity.setFirstNameUser(userRequest.getFirstNameUser());
         userEntity.setLastNameUser(userRequest.getLastNameUser());
+        userEntity.setUserName(userRequest.getUserName());
         userEntity.setEmailUser(userRequest.getEmailUser());
         userEntity.setPasswordUser(userRequest.getPasswordUser());
         userEntity.setRoles(Set.of(rol));
