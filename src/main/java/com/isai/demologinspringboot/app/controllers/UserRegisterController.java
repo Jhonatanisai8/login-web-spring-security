@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(path = "/register")
 @RequiredArgsConstructor
 public class UserRegisterController {
 
@@ -22,12 +21,12 @@ public class UserRegisterController {
         return new UserRequest();
     }
 
-    @GetMapping
+    @GetMapping(path = "/register")
     public String showRegisterForm() {
         return "register";
     }
 
-    @PostMapping
+    @PostMapping(path = "/register")
     public String processRegisterForm(@ModelAttribute("user") UserRequest userRequest, Model model) {
         userService.saveUser(userRequest);
         return "redirect:/register?exito";
