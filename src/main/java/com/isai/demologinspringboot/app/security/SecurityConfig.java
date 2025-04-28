@@ -60,7 +60,7 @@ public class SecurityConfig {
                         .permitAll()
                         // Redirigir a una página con un mensaje si login falla
                         .failureUrl("/login?error=true")
-                        .defaultSuccessUrl("/login", true) // Redirigir al home después de un login exitoso
+                        .defaultSuccessUrl("/", true) // Redirigir al home después de un login exitoso
                 )
 
                 // Configurar logout (aumentar seguridad y experiencia)

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="https://www.thymeleaf.org">
+<html lang="es" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title th:text="${title}"></title>
@@ -19,17 +19,20 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+                    <a class="nav-link active" aria-current="page" th:href="@{/}">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Registro</a>
+                    <a class="nav-link" th:href="@{/register}">Registro</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a th:href="@{/logout}">Cerrar Sesion</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 <!--login-->
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+<div class=" container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     <div class="row w-100">
         <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4 mx-auto">
             <div class="card shadow-sm">
@@ -47,30 +50,32 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="userName" class="form-label">Nombre de Usuario:</label>
+                            <label for="username" class="form-label">Nombre de Usuario:</label>
                             <input type="text"
                                    class="form-control"
-                                   id="userName"
-                                   name="userName"
+                                   id="username"
+                                   name="username"
                                    placeholder="Ingrese su Usuario..."
                                    autofocus
                             >
                         </div>
 
                         <div class="mb-3">
-                            <label for="emailUser" class="form-label">Contraseña:</label>
-                            <input type="text"
+                            <label for="password" class="form-label">Contraseña:</label>
+                            <input type="password"
                                    class="form-control"
-                                   id="emailUser"
-                                   name="emailUser"
+                                   id="password"
+                                   name="password"
                                    placeholder="Ingrese su Contraseña..."
                             >
                         </div>
                         <div class="d-grid mb-3">
-                            <input type="submit" class="btn btn-primary" value="Iniciar Sesión" id="login-submit">
+                            <input type="submit" class="btn btn-primary" value="Iniciar Sesión"
+                                   id="login-submit">
                         </div>
                         <div class="text-center">
-                            <span>¿Eres nuevo Registrare? <a th:href="@{/register}">Registrarme</a></span>
+                                            <span>¿Eres nuevo Registrare? <a
+                                                    th:href="@{/register}">Registrarme</a></span>
                         </div>
                     </form>
                 </div>
