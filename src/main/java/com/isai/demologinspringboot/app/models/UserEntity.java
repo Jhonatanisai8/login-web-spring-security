@@ -30,7 +30,7 @@ public class UserEntity {
     @Column(nullable = false, length = 30)
     private String emailUser;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 100)
     private String passwordUser;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

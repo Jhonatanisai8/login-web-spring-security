@@ -31,6 +31,6 @@ public class UserRequest {
     private String emailUser;
 
     @NotBlank(message = "El nombre no puede estar Vacio")
-    @Size(max = 50)
+    @Size(max = 100)
     private String passwordUser;
 }

@@ -6,6 +6,7 @@ import com.isai.demologinspringboot.app.models.UserEntity;
 import com.isai.demologinspringboot.app.repositorys.UserRepository;
 import com.isai.demologinspringboot.app.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -16,6 +17,8 @@ public class UserServiceImpl
         implements UserService<UserEntity, UserRequest> {
 
     private final UserRepository userRepository;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public UserEntity saveUser(UserRequest entity) {
@@ -30,7 +33,7 @@ public class UserServiceImpl
         userEntity.setLastNameUser(userRequest.getLastNameUser());
         userEntity.setUserName(userRequest.getUserName());
         userEntity.setEmailUser(userRequest.getEmailUser());
-        userEntity.setPasswordUser(userRequest.getPasswordUser());
+        userEntity.setPasswordUser(bCryptPasswordEncoder.encode(userRequest.getPasswordUser()));
         userEntity.setRoles(Set.of(rol));
         return userEntity;
     }
