@@ -17,6 +17,9 @@ public class UserValidador implements Validator {
     public void validate(Object target, Errors errors) {
         UserRequest userRequest = (UserRequest) target;
         ValidationUtils.rejectIfEmpty(errors, "userName", "NotEmpty.userRequest.userName");
+        if (userRequest.getUserName().length() > 10){
+            errors.rejectValue("userName", "Size.userRequest.userName");
+        }
 //        if (!user.getPhone().matches("\\d{3}[-.\\s]?\\d{3}[-.\\s]?\\d{4}")) {
 //            errors.rejectValue("phone", "Invalid.user.phone");
 //        }

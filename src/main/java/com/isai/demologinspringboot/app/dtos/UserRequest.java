@@ -1,5 +1,6 @@
 package com.isai.demologinspringboot.app.dtos;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -22,11 +23,11 @@ public class UserRequest {
     @NotBlank(message = "Los apellidos no pueden estar Vacio")
     private String lastNameUser;
 
-    @Size(max = 50)
     private String userName;
 
-    @NotBlank(message = "El nombre no puede estar Vacio")
+    @NotBlank(message = "El Email no puede estar Vacio")
     @Size(max = 50)
+    @Email
     private String emailUser;
 
     @NotBlank(message = "El nombre no puede estar Vacio")
