@@ -12,4 +12,9 @@ public class RegistryController {
         model.addAttribute("title", "Login");
         return "login";
     }
+    @GetMapping(path = "/")
+    public String initPage(Model model) {
+        model.addAttribute("title", "Login");
+        return "index";
+    }
 }
