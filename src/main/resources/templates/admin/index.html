@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Clientes</title>
+    <style>
+        .img-thumbnail {
+            max-width: 120px;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+
+        .modal-content {
+            border-radius: 0.5rem;
+        }
+
+        .btn-morado {
+            background-color: #5863F8;
+            border-color: #5863F8;
+            color: #fff;
+        }
+
+        .btn-morado:hover {
+            background-color: #464edb;
+            border-color: #464edb;
+            color: #fff;
+        }
+
+        .btn-morado:focus {
+            box-shadow: 0 0 0 0.2rem rgba(88, 99, 248, 0.5);
+        }
+
+        .btn-morado:active {
+            background-color: #353bbd;
+            border-color: #353bbd;
+            color: #fff;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #5863F8;
+            border-color: #5863F8;
+            color: #fff;
+        }
+
+        .bg-morado {
+            background-color: #5863F8 !important;
+            color: #fff !important;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="container my-5">
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-morado text-white d-flex justify-content-between align-items-center">
+                <h1 class="mb-0 h3">Gestión de Clientes</h1>
+                <a href="/admin/clients/new" class="btn btn-morado btn-sm">
+                    <i class="bi bi-plus-circle me-2"></i>Agregar Cliente
+                </a>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered align-middle">
+                        <thead class="table-dark">
+                        <tr>
+                            <th scope="col" style="width: 150px;">Foto</th>
+                            <th scope="col">Nombre Completo</th>
+                            <th scope="col">DNI</th>
+                            <th scope="col">Correo</th>
+                            <th scope="col">F. Nacimiento</th>
+                            <th scope="col">Género</th>
+                            <th scope="col">F. Registro</th>
+                            <th scope="col" style="width: 180px;">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="client : ${clients.content}" th:object="${client}">
+                            <td>
+                                <a th:href="@{/assets/{filename}(filename=*{pathImageProfile})}"
+                                   data-fancybox="gallery" data-caption="Foto de perfil">
+                                    <img th:src="@{/assets/{filename}(filename=*{pathImageProfile})}" alt="Foto"
+                                         class="img-thumbnail">
+                                </a>
+                            </td>
+                            <td>
+                                <div th:text="*{firstName + ' ' + lastName}" class="fw-semibold fs-5 mb-2"></div>
+                            </td>
+                            <td th:text="*{dniClient}"></td>
+                            <td th:text="*{email}"></td>
+                            <td th:text="${#temporals.format(client.birthDate, 'dd-MM-yyyy')}"></td>
+                            <td th:text="*{gender == 'M' ? 'Masculino' : 'Femenino'}"></td>
+                            <td th:text="${#temporals.format(client.dateRegistration, 'dd-MM-yyyy')}"></td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a th:href="@{/admin/clients/{clientId}/edit(clientId=*{idClient})}"
+                                       class="btn btn-morado btn-sm">
+                                        <i class="bi bi-pencil me-1"></i>Editar
+                                    </a>
+                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                            data-bs-toggle="modal"
+                                            th:data-bs-target="${'#deleteModal-' + client.idClient}">
+                                        <i class="bi bi-trash me-1"></i>Eliminar
+                                    </button>
+                                </div>
+
+                                <div class="modal fade" th:id="${'deleteModal-' + client.idClient}" tabindex="-1"
+                                     th:aria-labelledby="${'deleteModalLabel-' + client.idClient}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title"
+                                                    th:id="${'deleteModalLabel-' + client.idClient}">
+                                                    Confirmar Eliminación
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white"
+                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                ¿Estás seguro de que deseas eliminar al cliente "<strong
+                                                    th:text="*{firstName + ' ' + lastName}"></strong>"? Esta acción no
+                                                se puede deshacer.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-secondary"
+                                                        data-bs-dismiss="modal">
+                                                    Cancelar
+                                                </button>
+                                                <a th:href="@{/admin/clients/{clientId}/delete(clientId=*{idClient})}"
+                                                   class="btn btn-morado">Eliminar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div th:if="${clients.totalPages > 1}" class="d-flex justify-content-center mt-4">
+                    <nav aria-label="Paginación de clientes">
+                        <ul class="pagination pagination-lg">
+                            <li class="page-item"
+                                th:classappend="${clients.hasPrevious()} ? '' : 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/admin/clients(page=${clients.number - 1})}"
+                                   aria-label="Anterior">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item"
+                                th:each="i : ${#numbers.sequence(0, clients.totalPages - 1)}"
+                                th:classappend="${i == clients.number} ? 'active' : ''">
+                                <a class="page-link"
+                                   th:href="@{/admin/clients(page=${i})}"
+                                   th:text="${i + 1}">1</a>
+                            </li>
+                            <li class="page-item"
+                                th:classappend="${clients.hasNext()} ? '' : 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/admin/clients(page=${clients.number + 1})}"
+                                   aria-label="Siguiente">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
