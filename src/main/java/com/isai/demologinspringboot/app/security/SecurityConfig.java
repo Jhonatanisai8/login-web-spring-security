@@ -47,6 +47,7 @@ public class SecurityConfig {
                 // Configuración de rutas públicas y protegidas
                 .authorizeHttpRequests(authorizeRequests -> {
                     // Definir rutas públicas (sin autenticación)
+                    authorizeRequests.requestMatchers("/admin/**").authenticated();
                     authorizeRequests.requestMatchers("/register**", "/login**", "/js/**", "/css/**", "/img/**")
                             .permitAll();
                     // Cualquier otra ruta necesita estar autenticado
