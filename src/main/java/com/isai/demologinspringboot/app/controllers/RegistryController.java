@@ -15,6 +15,6 @@ public class RegistryController {
     @GetMapping(path = "/")
     public String initPage(Model model) {
         model.addAttribute("title", "Login");
-        return "index";
+        return "redirect:admin";
     }
 }
