@@ -1,9 +1,0 @@
-spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    password: 753159852
-    url: jdbc:postgresql://localhost:5432/bd_login_spring_secutity
-    username: postgres
-  jpa:
-    hibernate:
-      ddl-auto: update
