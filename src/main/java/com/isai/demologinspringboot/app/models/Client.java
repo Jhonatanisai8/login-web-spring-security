@@ -22,35 +22,37 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idClient;
-
     @Size(max = 50)
+    @NotBlank(message = "El nombre es obligatorio")
     private String firstName;
 
     @Size(max = 50)
+    @NotBlank(message = "El apellido es obligatorio")
     private String lastName;
 
-    @Size(max = 8)
+    @Size(min = 8, max = 8, message = "El DNI debe tener 8 dígitos")
+    @NotBlank(message = "El DNI es obligatorio")
     private String dniClient;
 
-    @Size(max = 9)
+    @Size(min = 9, max = 9, message = "El teléfono debe tener 9 dígitos")
+    @NotBlank(message = "El teléfono es obligatorio")
     private String phone;
 
-    private String pathImageProfile;
-
-    @Email
-    @NotBlank
+    @Email(message = "Correo inválido")
+    @NotBlank(message = "El correo es obligatorio")
     @Size(max = 40)
     private String email;
 
-    @NotNull
+    @NotNull(message = "La fecha de nacimiento es obligatoria")
     private LocalDate birthDate;
 
-    @NotNull
-    @Size(max = 1)
-    private char gender;
+    @NotNull(message = "El género es obligatorio")
+    private Character gender;
 
-    @NotNull
+    @NotNull(message = "La fecha de registro es obligatoria")
     private LocalDate dateRegistration;
+
+    private String PathImageProfile;
 
     @Transient
     private MultipartFile imageProfile;
