@@ -112,4 +112,11 @@ public class AdminController {
         return new ModelAndView("redirect:/admin");
     }
 
+    @GetMapping(path = "/clients/{idClient}/remove")
+    public String removeClient(
+            @PathVariable Integer idClient) {
+        clientRepository.deleteById(idClient);
+        return "redirect:/admin";
+    }
+
 }
