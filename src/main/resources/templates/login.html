@@ -5,7 +5,27 @@
     <title th:text="${title}"></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <style>
+        .btn-morado {
+            background-color: #5863F8;
+            border-color: #5863F8;
+            color: #fff;
+        }
 
+        .btn-morado:hover {
+            background-color: #464edb;
+            border-color: #464edb;
+        }
+
+        .btn-morado:focus {
+            box-shadow: 0 0 0 0.2rem rgba(88, 99, 248, 0.5);
+        }
+
+        .btn-morado:active {
+            background-color: #353bbd;
+            border-color: #353bbd;
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
@@ -30,7 +50,6 @@
         </div>
     </div>
 </nav>
-<!--login-->
 <div class=" container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     <div class="row w-100">
         <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4 mx-auto">
@@ -69,12 +88,12 @@
                             >
                         </div>
                         <div class="d-grid mb-3">
-                            <input type="submit" class="btn btn-primary" value="Iniciar Sesión"
+                            <input type="submit" class="btn btn-morado" value="Iniciar Sesión"
                                    id="login-submit">
                         </div>
                         <div class="text-center">
                                             <span>¿Eres nuevo Registrare? <a
-                                                    th:href="@{/register}">Registrarme</a></span>
+                                                    th:href="@{/register}" class="btn btn-morado">Registrarme</a></span>
                         </div>
                     </form>
                 </div>
