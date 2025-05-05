@@ -14,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -66,4 +67,49 @@ public class AdminController {
         // Redirigir al inicio del panel admin
         return new ModelAndView("redirect:/admin");
     }
+
+
+    @GetMapping(path = "/clients/{idClient}/edit")
+    public ModelAndView showFormEditCustomer(@PathVariable Integer idClient) {
+        List<Speciality> specialities = specialityRepository.findAll(Sort.by("nameSpeciality"));
+        Client client = clientRepository.findByIdClient(idClient);
+        return new ModelAndView("admin/edit-client")
+                .addObject("client", client)
+                .addObject("specialities", specialities);
+    }
+
+    @PostMapping(path = "/clients/{idClient}/edit")
+    public ModelAndView editClient(
+            @PathVariable Integer idClient,
+            @Valid Client client,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<Speciality> specialities = specialityRepository.findAll(Sort.by("nameSpeciality"));
+            return new ModelAndView("admin/edit-client")
+                    .addObject("client", client)
+                    .addObject("specialities", specialities);
+        }
+
+        Client clientDataBase = clientRepository.findByIdClient(idClient);
+
+        clientDataBase.setFirstName(client.getFirstName());
+        clientDataBase.setLastName(client.getLastName());
+        clientDataBase.setDniClient(client.getDniClient());
+        clientDataBase.setPhone(client.getPhone());
+        clientDataBase.setEmail(client.getEmail());
+        clientDataBase.setBirthDate(client.getBirthDate());
+        clientDataBase.setGender(client.getGender());
+        clientDataBase.setDateRegistration(client.getDateRegistration());
+
+        if (client.getImageProfile() != null && !client.getImageProfile().isEmpty()) {
+            warehouseServiceImp.deleteFile(clientDataBase.getPathImageProfile());
+            String routeCover = warehouseServiceImp.storeFile(client.getImageProfile());
+            clientDataBase.setPathImageProfile(routeCover);
+        }
+
+        clientRepository.save(clientDataBase);
+
+        return new ModelAndView("redirect:/admin");
+    }
+
 }
