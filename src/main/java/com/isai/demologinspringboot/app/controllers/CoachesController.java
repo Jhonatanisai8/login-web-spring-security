@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class CoachesController {
     @GetMapping("/coaches")
     public ModelAndView showCoaches() {
-        return new ModelAndView("admin/coaches");
+        return new ModelAndView("admin/coaches/coaches");
     }
 
 }
