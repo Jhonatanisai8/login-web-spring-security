@@ -44,6 +44,7 @@ public class MembershipsController {
     public ModelAndView saveMembershipType(
             @Validated MembershipType membershipType,
             BindingResult bindingResult) {
+        System.out.println(membershipType.getBenefits().length());
         if (bindingResult.hasErrors() || membershipType.getImageProfile().isEmpty()) {
             if (membershipType.getImageProfile().isEmpty()) {
                 bindingResult.rejectValue("imageProfile",
