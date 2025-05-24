@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Tipos de Membresía</title>
+    <style>
+        /* Estilos generales para el hero section y tarjetas */
+        .card-img-top {
+            height: 200px; /* Ajusta la altura de la imagen de la membresía */
+            object-fit: cover;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%; /* Asegura que todas las tarjetas tengan la misma altura */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-body {
+            flex-grow: 1; /* Permite que el cuerpo de la tarjeta ocupe el espacio disponible */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%); /* Tonos de verde para membresías */
+            color: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            padding: 3rem 2rem; /* Ajusta el padding */
+        }
+
+        .memberships-section {
+            margin-bottom: 6rem;
+        }
+
+        .card-col {
+            margin-bottom: 2rem;
+        }
+
+        /* Estilos específicos para badges e íconos */
+        .badge-info {
+            background-color: #17a2b8; /* Azul claro */
+            color: white;
+        }
+
+        .badge-success {
+            background-color: #28a745; /* Verde */
+            color: white;
+        }
+
+        .text-precio {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745; /* Color verde para el precio */
+        }
+
+        .small-icon {
+            font-size: 0.9em; /* Íconos un poco más pequeños */
+        }
+
+        .truncate-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Limita a 3 líneas */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #5863F8;
+            border-color: #5863F8;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="container my-5">
+        <div class="hero-section p-5 text-center mb-5">
+            <h1 class="display-4 fw-bold mb-3">Descubre Nuestras Membresías</h1>
+            <p class="lead">Elige el plan perfecto para ti y empieza a disfrutar de todos nuestros beneficios.</p>
+            <a href="/admin/memberships/new" class="btn btn-light btn-lg mt-3">
+                <i class="bi bi-plus-circle me-2"></i>Agregar Nueva Membresía
+            </a>
+        </div>
+
+        <div class="memberships-section">
+            <h4 class="text-primary mb-4 fw-semibold">Planes Disponibles</h4>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                <div class="col card-col" th:each="membership : ${membershipTypesPage.content}"
+                     th:object="${membership}">
+                    <div class="card shadow-sm">
+                        <img th:src="@{/assets/{filename}(filename=*{pathImageProfile})}"
+                             th:alt="${'Imagen de ' + *{membershipName}}"
+                             class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title fw-semibold text-dark" th:text="*{membershipName}"></h5>
+                            <p class="card-text text-muted small mb-2">
+                                <i class="bi bi-tag small-icon me-1"></i>Código: <span
+                                    th:text="*{membershipCode}"></span>
+                            </p>
+                            <p class="card-text text-muted small mb-2">
+                                <i class="bi bi-calendar-check small-icon me-1"></i>Duración: <span
+                                    th:text="*{durationDays} + ' días'"></span>
+                            </p>
+                            <p class="card-text text-muted small mb-2">
+                                <i class="bi bi-person-up small-icon me-1"></i>Accesos mensuales: <span
+                                    th:text="*{monthlyAccesses}"></span>
+                            </p>
+                            <p class="card-text text-muted small mb-3">
+                                <i class="bi bi-calendar-event me-1"></i>Creación: <span
+                                    th:text="${#dates.format(membership.creationDate, 'dd-MM-yyyy')}"></span>
+                            </p>
+                            <p class="card-text text-success text-precio mb-3">
+                                <span th:text="${#numbers.formatCurrency(membership.price)}"></span>
+                            </p>
+
+                            <div class="mb-3">
+                                <p class="card-text small text-secondary truncate-text" th:text="*{description}"></p>
+                                <p class="card-text small text-info truncate-text" th:text="*{benefits}"></p>
+                            </div>
+
+                            <div class="mt-auto d-flex justify-content-between align-items-center">
+                                <span th:if="*{active}" class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Activo</span>
+                                <span th:unless="*{active}" class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Inactivo</span>
+
+                                <div class="btn-group" role="group" aria-label="Acciones de Membresía">
+                                    <a th:href="@{/admin/memberships/{idMembershipType}/edit(idMembershipType=*{idMembershipType})}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                            data-bs-toggle="modal"
+                                            th:data-bs-target="${'#deleteModal-' + membership.idMembershipType}">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" th:id="${'deleteModal-' + membership.idMembershipType}" tabindex="-1"
+                         th:aria-labelledby="${'deleteModalLabel-' + membership.idMembershipType}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title"
+                                        th:id="${'deleteModalLabel-' + membership.idMembershipType}">
+                                        Confirmar Eliminación
+                                    </h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Estás seguro de que deseas eliminar el tipo de membresía "<strong
+                                        th:text="*{membershipName}"></strong>"? Esta acción no se puede deshacer.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Cancelar
+                                    </button>
+                                    <a th:href="@{/admin/memberships/{idMembershipType}/remove(idMembershipType=*{idMembershipType})}"
+                                       class="btn btn-danger">Eliminar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${membershipTypesPage.content.isEmpty()}" class="alert alert-info text-center mt-5"
+                 role="alert">
+                No hay tipos de membresía disponibles en este momento.
+            </div>
+        </div>
+
+        <div th:if="${membershipTypesPage.totalPages > 0}" class="d-flex justify-content-center mt-4">
+            <nav aria-label="Paginación de tipos de membresía">
+                <ul class="pagination pagination-lg">
+                    <li class="page-item"
+                        th:classappend="${membershipTypesPage.hasPrevious()} ? '' : 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/admin/memberships(page=${membershipTypesPage.number - 1})}"
+                           aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item"
+                        th:each="pageNumber : ${#numbers.sequence(0, membershipTypesPage.totalPages - 1)}"
+                        th:classappend="${pageNumber == membershipTypesPage.number} ? 'active' : ''">
+                        <a class="page-link"
+                           th:href="@{/admin/memberships(page=${pageNumber})}"
+                           th:text="${pageNumber + 1}"></a></li>
+                    <li class="page-item"
+                        th:classappend="${membershipTypesPage.hasNext()} ? '' : 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/admin/memberships(page=${membershipTypesPage.number + 1})}"
+                           aria-label="Siguiente">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+</html>
