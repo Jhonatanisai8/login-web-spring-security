@@ -47,9 +47,9 @@ public class Trainer {
     @NotNull
     private LocalDate birthDate;
 
-    @NotNull
-    @Size(max = 1)
-    private char gender;
+    @NotNull(message = "El género es obligatorio")
+    @Size(max = 10)
+    private String gender;
 
     @NotNull
     private LocalDate dateRegistration;
