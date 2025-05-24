@@ -23,7 +23,7 @@ public class Trainer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idClient;
+    private Integer idTrainer;
 
     @Size(max = 50)
     private String firstName;
@@ -56,7 +56,7 @@ public class Trainer {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "trainers_specialitys",
-            joinColumns = @JoinColumn(name = "id_client"),
+            joinColumns = @JoinColumn(name = "id_trainer"),
             inverseJoinColumns = @JoinColumn(name = "id_speciality"))
     private Set<Speciality> specialities;
 
