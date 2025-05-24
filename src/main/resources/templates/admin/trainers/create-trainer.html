@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Entrenador</title>
+    <style>
+        form .invalid-feedback {
+            display: block;
+        }
+
+        .bg-morado {
+            background-color: #5863F8 !important;
+            color: #fff !important;
+        }
+
+        .btn-morado {
+            background-color: #5863F8;
+            border-color: #5863F8;
+            color: #fff;
+        }
+
+        .btn-morado:hover {
+            background-color: #464edb;
+            border-color: #464edb;
+            color: #fff;
+        }
+
+        .btn-morado:focus {
+            box-shadow: 0 0 0 0.2rem rgba(88, 99, 248, 0.5);
+        }
+
+        .btn-morado:active {
+            background-color: #353bbd;
+            border-color: #353bbd;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="container my-5">
+        <div class="card shadow-lg">
+            <div class="card-header bg-morado text-white">
+                <h2 class="mb-0">Formulario de Registro de Entrenador</h2></div>
+            <div class="card-body">
+                <p class="lead text-muted">Ingresa los datos del nuevo entrenador</p>
+                <hr class="my-4">
+                <form th:action="@{/admin/trainers/new}" method="post" th:object="${trainer}"
+                      enctype="multipart/form-data"
+                      class="row g-3">
+
+                    <div class="col-md-6">
+                        <label for="firstName" class="form-label fw-semibold">Nombres:</label>
+                        <input type="text" class="form-control" id="firstName" th:field="*{firstName}"
+                               placeholder="Nombre del entrenador">
+                        <div th:if="${#fields.hasErrors('firstName')}" class="invalid-feedback d-block">
+                            <span th:errors="*{firstName}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="lastName" class="form-label fw-semibold">Apellidos:</label>
+                        <input type="text" class="form-control" id="lastName" th:field="*{lastName}"
+                               placeholder="Apellido del entrenador">
+                        <div th:if="${#fields.hasErrors('lastName')}" class="invalid-feedback d-block">
+                            <span th:errors="*{lastName}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="dniTrainer" class="form-label fw-semibold">DNI:</label>
+                        <input type="text" class="form-control" id="dniTrainer" th:field="*{dniTrainer}"
+                               placeholder="Número de DNI del entrenador">
+                        <div th:if="${#fields.hasErrors('dniTrainer')}" class="invalid-feedback d-block">
+                            <span th:errors="*{dniTrainer}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label fw-semibold">Teléfono:</label>
+                        <input type="text" class="form-control" id="phone" th:field="*{phone}"
+                               placeholder="Número de teléfono">
+                        <div th:if="${#fields.hasErrors('phone')}" class="invalid-feedback d-block">
+                            <span th:errors="*{phone}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="email" class="form-label fw-semibold">Correo Electrónico:</label>
+                        <input type="email" class="form-control" id="email" th:field="*{email}"
+                               placeholder="ejemplo@correo.com">
+                        <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback d-block">
+                            <span th:errors="*{email}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="birthDate" class="form-label fw-semibold">Fecha de nacimiento:</label>
+                        <input type="date" class="form-control" id="birthDate" th:field="*{birthDate}">
+                        <div th:if="${#fields.hasErrors('birthDate')}" class="invalid-feedback d-block">
+                            <span th:errors="*{birthDate}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Género:</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="genderM" th:field="*{gender}"
+                                       value="M">
+                                <label class="form-check-label" for="genderM">Masculino</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="genderF" th:field="*{gender}"
+                                       value="F">
+                                <label class="form-check-label" for="genderF">Femenino</label>
+                            </div>
+                        </div>
+                        <div th:if="${#fields.hasErrors('gender')}" class="invalid-feedback d-block">
+                            <span th:errors="*{gender}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="dateRegistration" class="form-label fw-semibold">Fecha de registro:</label>
+                        <input type="date" class="form-control" id="dateRegistration" th:field="*{dateRegistration}">
+                        <div th:if="${#fields.hasErrors('dateRegistration')}" class="invalid-feedback d-block">
+                            <span th:errors="*{dateRegistration}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="specialities" class="form-label fw-semibold">Especialidades:</label>
+                        <select class="form-select" id="specialities" th:field="*{specialities}" multiple>
+                            <option th:each="spec : ${specialitiesBD}" th:value="${spec.idSpeciality}"
+                                    th:text="${spec.nameSpeciality}"></option>
+                        </select>
+                        <div th:if="${#fields.hasErrors('specialities')}" class="invalid-feedback d-block">
+                            <span th:errors="*{specialities}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="imageProfile" class="form-label fw-semibold">Imagen de Perfil:</label>
+                        <input type="file" class="form-control" id="imageProfile" name="imageProfile">
+                        <div th:if="${#fields.hasErrors('imageProfile')}" class="invalid-feedback d-block">
+                            <span th:errors="*{imageProfile}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <button type="submit" class="btn btn-morado btn-lg me-2">
+                            <i class="bi bi-save me-2"></i>Guardar Entrenador
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-eraser me-2"></i>Limpiar Formulario
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>
