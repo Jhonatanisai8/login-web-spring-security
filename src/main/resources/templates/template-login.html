@@ -1,0 +1,34 @@
+<!--navegacion-->
+<div th:fragment="nav">
+    <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-semibold text-secondary" href="#">Login</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary" th:href="@{/}">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary" th:href="@{/register}">Registro</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link text-secondary" th:href="@{/logout}">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+footer
+<div th:fragment="footer">
+    <footer class="bg-white text-center text-secondary py-3 border-top">
+        <div class="container">
+            <p class="mb-0">© 2025 Jhonatan Isai. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</div>
