@@ -28,5 +28,11 @@ public class MembershipsController {
                 .addObject("membershipTypesPage", membershipTypesPage);
     }
 
+    @GetMapping(path = "/memberships/new")
+    public ModelAndView showFormNewMembershipType() {
+        return new ModelAndView("admin/memberships/create-membershipType")
+                .addObject("membershipType", new MembershipType());
+    }
+
 
 }

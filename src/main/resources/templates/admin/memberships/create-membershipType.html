@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Tipo de Membresía</title>
+    <style>
+        form .invalid-feedback {
+            display: block;
+        }
+
+        .bg-morado {
+            background-color: #5863F8 !important;
+            color: #fff !important;
+        }
+
+        .btn-morado {
+            background-color: #5863F8;
+            border-color: #5863F8;
+            color: #fff;
+        }
+
+        .btn-morado:hover {
+            background-color: #464edb;
+            border-color: #464edb;
+            color: #fff;
+        }
+
+        .btn-morado:focus {
+            box-shadow: 0 0 0 0.2rem rgba(88, 99, 248, 0.5);
+        }
+
+        .btn-morado:active {
+            background-color: #353bbd;
+            border-color: #353bbd;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="container my-5">
+        <div class="card shadow-lg">
+            <div class="card-header bg-morado text-white">
+                <h2 class="mb-0">Formulario de Registro de Tipo de Membresía</h2>
+            </div>
+            <div class="card-body">
+                <p class="lead text-muted">Ingresa los datos del nuevo tipo de membresía</p>
+                <hr class="my-4">
+                <form th:action="@{/admin/memberships/new}"
+                      method="post"
+                      th:object="${membershipType}"
+                      enctype="multipart/form-data"
+                      class="row g-3">
+
+                    <div class="col-md-6">
+                        <label for="membershipCode" class="form-label fw-semibold">Código de Membresía:</label>
+                        <input type="text" class="form-control" id="membershipCode" th:field="*{membershipCode}"
+                               placeholder="Ej: PLAN_PREMIUM">
+                        <div th:if="${#fields.hasErrors('membershipCode')}" class="invalid-feedback d-block">
+                            <span th:errors="*{membershipCode}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="membershipName" class="form-label fw-semibold">Nombre de la Membresía:</label>
+                        <input type="text" class="form-control" id="membershipName" th:field="*{membershipName}"
+                               placeholder="Ej: Membresía Premium">
+                        <div th:if="${#fields.hasErrors('membershipName')}" class="invalid-feedback d-block">
+                            <span th:errors="*{membershipName}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="price" class="form-label fw-semibold">Precio:</label>
+                        <input type="number" step="0.01" class="form-control" id="price" th:field="*{price}"
+                               placeholder="0.00">
+                        <div th:if="${#fields.hasErrors('price')}" class="invalid-feedback d-block">
+                            <span th:errors="*{price}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="durationDays" class="form-label fw-semibold">Duración (Días):</label>
+                        <input type="number" class="form-control" id="durationDays" th:field="*{durationDays}"
+                               placeholder="Ej: 30 (para un mes)">
+                        <div th:if="${#fields.hasErrors('durationDays')}" class="invalid-feedback d-block">
+                            <span th:errors="*{durationDays}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="monthlyAccesses" class="form-label fw-semibold">Accesos Mensuales:</label>
+                        <input type="number" class="form-control" id="monthlyAccesses" th:field="*{monthlyAccesses}"
+                               placeholder="Ej: 10 (cantidad de accesos)">
+                        <div th:if="${#fields.hasErrors('monthlyAccesses')}" class="invalid-feedback d-block">
+                            <span th:errors="*{monthlyAccesses}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="creationDate" class="form-label fw-semibold">Fecha de Creación:</label>
+                        <input type="date" class="form-control" id="creationDate" th:field="*{creationDate}">
+                        <div th:if="${#fields.hasErrors('creationDate')}" class="invalid-feedback d-block">
+                            <span th:errors="*{creationDate}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="description" class="form-label fw-semibold">Descripción:</label>
+                        <textarea class="form-control" id="description" th:field="*{description}" rows="3"
+                                  placeholder="Breve descripción de la membresía"></textarea>
+                        <div th:if="${#fields.hasErrors('description')}" class="invalid-feedback d-block">
+                            <span th:errors="*{description}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="benefits" class="form-label fw-semibold">Beneficios:</label>
+                        <textarea class="form-control" id="benefits" th:field="*{benefits}" rows="3"
+                                  placeholder="Lista de beneficios (ej: Acceso ilimitado, 5 clases grupales)"></textarea>
+                        <div th:if="${#fields.hasErrors('benefits')}" class="invalid-feedback d-block">
+                            <span th:errors="*{benefits}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="restrictionsMembershipType" class="form-label fw-semibold">Restricciones:</label>
+                        <textarea class="form-control" id="restrictionsMembershipType"
+                                  th:field="*{restrictionsMembershipType}" rows="3"
+                                  placeholder="Cualquier restricción o limitación de la membresía"></textarea>
+                        <div th:if="${#fields.hasErrors('restrictionsMembershipType')}"
+                             class="invalid-feedback d-block">
+                            <span th:errors="*{restrictionsMembershipType}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Estado:</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="activeTrue" th:field="*{active}"
+                                       th:value="true">
+                                <label class="form-check-label" for="activeTrue">Activa</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="activeFalse" th:field="*{active}"
+                                       th:value="false">
+                                <label class="form-check-label" for="activeFalse">Inactiva</label>
+                            </div>
+                        </div>
+                        <div th:if="${#fields.hasErrors('active')}" class="invalid-feedback d-block">
+                            <span th:errors="*{active}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="imageProfile" class="form-label fw-semibold">Imagen de Membresía:</label>
+                        <input type="file" class="form-control" id="imageProfile" name="imageProfile">
+                        <div th:if="${#fields.hasErrors('imageProfile')}" class="invalid-feedback d-block">
+                            <span th:errors="*{imageProfile}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <button type="submit" class="btn btn-morado btn-lg me-2">
+                            <i class="bi bi-save me-2"></i>Guardar Membresía
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-eraser me-2"></i>Limpiar Formulario
+                        </button>
+                        <a th:href="@{/admin/memberships}" class="btn btn-outline-dark btn-lg ms-2">
+                            <i class="bi bi-x-circle me-2"></i>Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>
