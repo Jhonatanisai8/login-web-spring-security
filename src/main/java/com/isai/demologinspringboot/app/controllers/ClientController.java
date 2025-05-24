@@ -24,22 +24,22 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin")
-public class AdminController {
+public class ClientController {
     private final ClientRepository clientRepository;
     private final SpecialityRepository specialityRepository;
     private final WarehouseServiceImp warehouseServiceImp;
 
-    @GetMapping("")
+    @GetMapping(path = "/clients")
     public ModelAndView seePageHome(@PageableDefault(sort = "firstName", size = 5) Pageable pageable) {
         Page<Client> clients = clientRepository.findAll(pageable);
-        return new ModelAndView("admin/index")
+        return new ModelAndView("admin/clients/show")
                 .addObject("clients", clients);
     }
 
     @GetMapping("/clients/new")
     public ModelAndView showFormNewCustomer() {
         List<Speciality> specialities = specialityRepository.findAll(Sort.by("nameSpeciality"));
-        return new ModelAndView("admin/new-client")
+        return new ModelAndView("admin/clients/create-client")
                 .addObject("client", new Client())
                 .addObject("specialities", specialities);
     }
@@ -54,7 +54,7 @@ public class AdminController {
                 bindingResult.rejectValue("imageProfile", "MultipartNotEmpty", "La imagen es obligatoria");
             }
             List<Speciality> specialities = specialityRepository.findAll(Sort.by("nameSpeciality"));
-            return new ModelAndView("admin/new-client")
+            return new ModelAndView("admin/clients/create-client")
                     .addObject("client", client)
                     .addObject("specialities", specialities);
         }
@@ -73,7 +73,7 @@ public class AdminController {
     public ModelAndView showFormEditCustomer(@PathVariable Integer idClient) {
         List<Speciality> specialities = specialityRepository.findAll(Sort.by("nameSpeciality"));
         Client client = clientRepository.findByIdClient(idClient);
-        return new ModelAndView("admin/edit-client")
+        return new ModelAndView("admin/clients/edit-client")
                 .addObject("client", client)
                 .addObject("specialities", specialities);
     }
@@ -85,7 +85,7 @@ public class AdminController {
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<Speciality> specialities = specialityRepository.findAll(Sort.by("nameSpeciality"));
-            return new ModelAndView("admin/edit-client")
+            return new ModelAndView("admin/clients/edit-client")
                     .addObject("client", client)
                     .addObject("specialities", specialities);
         }
@@ -109,14 +109,14 @@ public class AdminController {
 
         clientRepository.save(clientDataBase);
 
-        return new ModelAndView("redirect:/admin");
+        return new ModelAndView("redirect:/admin/clients");
     }
 
     @GetMapping(path = "/clients/{idClient}/remove")
     public String removeClient(
             @PathVariable Integer idClient) {
         clientRepository.deleteById(idClient);
-        return "redirect:/admin";
+        return "redirect:/admin/clients";
     }
 
 }

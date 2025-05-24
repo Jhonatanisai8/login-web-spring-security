@@ -57,13 +57,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link btn-morado" href="/templates/admin/home.html">Inicio</a>
+                    <a class="nav-link btn-morado"  th:href="@{/admin}">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link btn-morado" href="/admin">Clientes</a>
+                    <a class="nav-link btn-morado" th:href="@{/admin/clients}">Clientes</a>
                 </li>
                 <li>
-                    <a class="nav-link btn-morado" th:href="@{/admin/coaches}">Entrenadores</a>
+                    <a class="nav-link btn-morado" th:href="@{/admin/trainers}">Entrenadores</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link btn-morado" th:href="@{/admin/memberships}">Membresías</a>

@@ -63,7 +63,7 @@
         <div class="card shadow-lg mb-4">
             <div class="card-header bg-morado text-white d-flex justify-content-between align-items-center">
                 <h1 class="mb-0 h3">Gestión de Clientes</h1>
-                <a href="/admin/clients/new" class="btn btn-sm btn-success">
+                <a href="/admin/clients/new" class="btn btn-sm btn-light">
                     <i class="bi bi-plus-circle me-2"></i>Agregar Cliente
                 </a>
             </div>
@@ -147,24 +147,23 @@
                     </table>
                 </div>
 
-                <div th:if="${clients.totalPages > 1}" class="d-flex justify-content-center mt-4">
+                <div th:if="${clients.totalPages > 0}" class="d-flex justify-content-center mt-4">
                     <nav aria-label="Paginación de clientes">
                         <ul class="pagination pagination-lg">
                             <li class="page-item"
                                 th:classappend="${clients.hasPrevious()} ? '' : 'disabled'">
                                 <a class="page-link"
-                                   th:href="@{/admin/clients(page=${clients.number - 1})}"
+                                   th:href="@{/admin(page=${clients.number - 1})}"
                                    aria-label="Anterior">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
                             <li class="page-item"
-                                th:each="i : ${#numbers.sequence(0, clients.totalPages - 1)}"
-                                th:classappend="${i == clients.number} ? 'active' : ''">
+                                th:each="pageNumber : ${#numbers.sequence(0, clients.totalPages - 1)}"
+                                th:classappend="${pageNumber == clients.number} ? 'active' : ''">
                                 <a class="page-link"
-                                   th:href="@{/admin/clients(page=${i})}"
-                                   th:text="${i + 1}">1</a>
-                            </li>
+                                   th:href="@{/admin/clients(page=${pageNumber})}"
+                                   th:text="${pageNumber + 1}"></a></li>
                             <li class="page-item"
                                 th:classappend="${clients.hasNext()} ? '' : 'disabled'">
                                 <a class="page-link"

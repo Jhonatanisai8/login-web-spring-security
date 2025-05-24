@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${client.idClient != null ? 'Editar Cliente' : 'Registrar Cliente'}">Registrar Cliente</title>
+    <style>
+        /* Tus estilos CSS existentes */
+        form .invalid-feedback {
+            display: block;
+        }
+
+        .bg-morado {
+            background-color: #5863F8 !important;
+            color: #fff !important;
+        }
+
+        .btn-morado {
+            background-color: #5863F8;
+            border-color: #5863F8;
+            color: #fff;
+        }
+
+        .btn-morado:hover {
+            background-color: #464edb;
+            border-color: #464edb;
+            color: #fff;
+        }
+
+        .btn-morado:focus {
+            box-shadow: 0 0 0 0.2rem rgba(88, 99, 248, 0.5);
+        }
+
+        .btn-morado:active {
+            background-color: #353bbd;
+            border-color: #353bbd;
+            color: #fff;
+        }
+
+        /* Estilo para la imagen actual (opcional) */
+        .img-thumbnail-preview {
+            max-width: 150px;
+            height: auto;
+            border: 1px solid #ddd;
+            padding: 3px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="container my-5">
+        <div class="card shadow-lg">
+            <div class="card-header bg-morado text-white">
+                <h2 class="mb-0"
+                    th:text="${client.idClient != null ? 'Formulario de Edición de Cliente' : 'Formulario de Registro de Cliente'}">
+                    Formulario de Clientes
+                </h2>
+            </div>
+            <div class="card-body">
+                <p class="lead text-muted"
+                   th:text="${client.idClient != null ? 'Edita los datos del cliente existente' : 'Ingresa los datos del nuevo cliente'}">
+                    Ingresa los datos del nuevo cliente
+                </p>
+                <hr class="my-4">
+                <form th:action="${client.idClient != null ? '/admin/clients/' + client.idClient + '/edit' : '/admin/clients/new'}"
+                      method="post"
+                      th:object="${client}"
+                      enctype="multipart/form-data"
+                      class="row g-3">
+
+                    <input type="hidden" th:if="${client.idClient != null}" th:field="*{idClient}">
+
+                    <div class="col-md-6">
+                        <label for="firstName" class="form-label fw-semibold">Nombres:</label>
+                        <input type="text" class="form-control" id="firstName" th:field="*{firstName}"
+                               placeholder="Nombre del cliente">
+                        <div th:if="${#fields.hasErrors('firstName')}" class="invalid-feedback d-block">
+                            <span th:errors="*{firstName}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="lastName" class="form-label fw-semibold">Apellidos:</label>
+                        <input type="text" class="form-control" id="lastName" th:field="*{lastName}"
+                               placeholder="Apellido del cliente">
+                        <div th:if="${#fields.hasErrors('lastName')}" class="invalid-feedback d-block">
+                            <span th:errors="*{lastName}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="dniClient" class="form-label fw-semibold">DNI:</label>
+                        <input type="text" class="form-control" id="dniClient" th:field="*{dniClient}"
+                               placeholder="Número de DNI">
+                        <div th:if="${#fields.hasErrors('dniClient')}" class="invalid-feedback d-block">
+                            <span th:errors="*{dniClient}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label fw-semibold">Teléfono:</label>
+                        <input type="text" class="form-control" id="phone" th:field="*{phone}"
+                               placeholder="Número de teléfono">
+                        <div th:if="${#fields.hasErrors('phone')}" class="invalid-feedback d-block">
+                            <span th:errors="*{phone}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="email" class="form-label fw-semibold">Correo Electrónico:</label>
+                        <input type="email" class="form-control" id="email" th:field="*{email}"
+                               placeholder="ejemplo@correo.com">
+                        <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback d-block">
+                            <span th:errors="*{email}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="birthDate" class="form-label fw-semibold">Fecha de nacimiento:</label>
+                        <input type="date" class="form-control" id="birthDate" th:field="*{birthDate}">
+                        <div th:if="${#fields.hasErrors('birthDate')}" class="invalid-feedback d-block">
+                            <span th:errors="*{birthDate}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Género:</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="genderM" th:field="*{gender}"
+                                       value="M"> <label class="form-check-label" for="genderM">Masculino</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="genderF" th:field="*{gender}"
+                                       value="F">
+                                <label class="form-check-label" for="genderF">Femenino</label>
+                            </div>
+                        </div>
+                        <div th:if="${#fields.hasErrors('gender')}" class="invalid-feedback d-block">
+                            <span th:errors="*{gender}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="dateRegistration" class="form-label fw-semibold">Fecha de registro:</label>
+                        <input type="date" class="form-control" id="dateRegistration" th:field="*{dateRegistration}">
+                        <div th:if="${#fields.hasErrors('dateRegistration')}" class="invalid-feedback d-block">
+                            <span th:errors="*{dateRegistration}"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="imageProfile" class="form-label fw-semibold">Imagen de Perfil:</label>
+                        <input type="file" class="form-control" id="imageProfile" name="imageProfile">
+                        <div th:if="${#fields.hasErrors('imageProfile')}" class="invalid-feedback d-block">
+                            <span th:errors="*{imageProfile}"></span>
+                        </div>
+                        <div th:if="${client.idClient != null and client.pathImageProfile != null and !client.pathImageProfile.isEmpty()}"
+                             class="mt-2">
+                            <p class="mb-1">Imagen actual:</p>
+                            <img th:src="@{/assets/{filename}(filename=${client.pathImageProfile})}"
+                                 alt="Imagen actual del cliente"
+                                 class="img-thumbnail-preview">
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <button type="submit" class="btn btn-morado btn-lg me-2">
+                            <i class="bi bi-save me-2"></i>
+                            <span th:text="${client.idClient != null ? 'Actualizar Cliente' : 'Guardar Cliente'}">Guardar Cliente</span>
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-eraser me-2"></i>Limpiar Formulario
+                        </button>
+                        <a th:href="@{/admin/clients}" class="btn btn-outline-dark btn-lg ms-2">
+                            <i class="bi bi-x-circle me-2"></i>Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>
