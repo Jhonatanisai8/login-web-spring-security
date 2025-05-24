@@ -4,7 +4,8 @@ import com.isai.demologinspringboot.app.models.MembershipType;
 import com.isai.demologinspringboot.app.repositorys.MembershipTypeRepository;
 import com.isai.demologinspringboot.app.services.MembershipTypeCrud;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class MembershipTypeService
     }
 
     @Override
-    public List<MembershipType> findAllMembershipTypes(Sort sort) {
-        return membershipTypeRepository.findAll(sort);
+    public Page<MembershipType> findAllMembershipTypes(Pageable pageable) {
+        return membershipTypeRepository.findAll(pageable);
     }
 }
