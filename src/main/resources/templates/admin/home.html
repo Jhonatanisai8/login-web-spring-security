@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="https://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthy Lifestyle - Sistema de Gestión</title>
+</head>
+
+<body>
+<div layout:fragment="content" class="container my-5">
+    <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="col-md-10 text-center">
+            <div class="card bg-light p-5 shadow-lg border-0 rounded-4">
+                <h1 class="display-4 fw-bold text-primary mb-3">Healthy Lifestyle</h1>
+                <p class="lead text-dark mb-4">Sistema de administración integral para gimnasios</p>
+
+                <p class="text-muted mb-4">
+                    Bienvenido al panel principal de <strong>Healthy Lifestyle</strong>, una solución diseñada para
+                    modernizar la gestión de tu gimnasio.
+                    Desde el registro de clientes hasta el control de pagos y entrenadores, todo en un solo lugar.
+                </p>
+
+                <div class="mb-4">
+                    <a href="/login" class="btn btn-primary btn-lg me-2">Ingresar al sistema</a>
+                    <a href="/about" class="btn btn-outline-secondary btn-lg">Conócenos</a>
+                </div>
+
+                <footer class="text-muted mt-5">
+                    <small>© 2025 Healthy Lifestyle. Todos los derechos reservados.</small>
+                </footer>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
