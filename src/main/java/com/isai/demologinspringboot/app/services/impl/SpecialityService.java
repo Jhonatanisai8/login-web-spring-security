@@ -4,6 +4,7 @@ import com.isai.demologinspringboot.app.models.Speciality;
 import com.isai.demologinspringboot.app.repositorys.SpecialityRepository;
 import com.isai.demologinspringboot.app.services.SpecialityCrud;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,5 +17,10 @@ public class SpecialityService implements SpecialityCrud {
     @Override
     public List<Speciality> findAllSpecialities() {
         return specialityRepository.findAll();
+    }
+
+    @Override
+    public List<Speciality> findAllSpecialities(Sort pageable) {
+        return specialityRepository.findAll(pageable);
     }
 }

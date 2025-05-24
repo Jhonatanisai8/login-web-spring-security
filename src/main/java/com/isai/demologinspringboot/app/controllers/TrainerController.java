@@ -9,10 +9,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -69,4 +71,54 @@ public class TrainerController {
         //redirigimos
         return new ModelAndView("redirect:/admin/trainers");
     }
+
+    @GetMapping(path = "trainers/{idTrainer}/edit")
+    public ModelAndView showFormEditTrainer(@PathVariable Integer idTrainer) {
+        Trainer trainer = trainerService.findTrainerById(idTrainer);
+        List<Speciality> specialitiesBD = specialityService.findAllSpecialities();
+        return new ModelAndView("admin/trainers/edit-trainer",
+                "trainer", trainer)
+                .addObject("specialitiesBD", specialitiesBD);
+    }
+
+    @PostMapping("/trainers/{idTrainer}/edit")
+    public ModelAndView updateTrainer(
+            @PathVariable Integer idTrainer,
+            @Valid Trainer trainer,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            List<Speciality> specialitiesBD = specialityService.findAllSpecialities(Sort.by("nameSpeciality"));
+            return new ModelAndView("admin/trainers/edit-trainer")
+                    .addObject("trainer", trainer)
+                    .addObject("specialitiesBD", specialitiesBD);
+        }
+
+        Trainer trainerDataBase = trainerService.findTrainerById(idTrainer);
+
+        trainerDataBase.setFirstName(trainer.getFirstName());
+        trainerDataBase.setLastName(trainer.getLastName());
+        trainerDataBase.setDniTrainer(trainer.getDniTrainer());
+        trainerDataBase.setPhone(trainer.getPhone());
+        trainerDataBase.setEmail(trainer.getEmail());
+        trainerDataBase.setBirthDate(trainer.getBirthDate());
+        trainerDataBase.setGender(trainer.getGender());
+        trainerDataBase.setDateRegistration(trainer.getDateRegistration());
+
+        if (trainer.getImageProfile() != null && !trainer.getImageProfile().isEmpty()) {
+            if (trainerDataBase.getPathImageProfile() != null && !trainerDataBase.getPathImageProfile().isEmpty()) {
+                warehouseServiceImp.deleteFile(trainerDataBase.getPathImageProfile());
+            }
+            String newImageName = warehouseServiceImp.storeFile(trainer.getImageProfile());
+            trainerDataBase.setPathImageProfile(newImageName);
+        }
+
+        trainerDataBase.setSpecialities(trainer.getSpecialities());
+
+        trainerService.saveTrainer(trainerDataBase);
+
+        return new ModelAndView("redirect:/admin/trainers");
+    }
+
+
 }
