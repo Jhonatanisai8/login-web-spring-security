@@ -111,7 +111,7 @@
                      th:object="${membership}">
                     <div class="card shadow-sm">
                         <img th:src="@{/assets/{filename}(filename=*{pathImageProfile})}"
-                             th:alt="${'Imagen de ' + *{membershipName}}"
+                             th:alt="*{membershipName}"
                              class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title fw-semibold text-dark" th:text="*{membershipName}"></h5>
