@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(path = "/admin")
@@ -120,5 +121,16 @@ public class TrainerController {
         return new ModelAndView("redirect:/admin/trainers");
     }
 
-
+    @GetMapping("/trainers/{idTrainer}/remove")
+    public ModelAndView removeTrainer(@PathVariable Integer idTrainer) {
+        Trainer trainerOptional = trainerService.findTrainerById(idTrainer);
+        if (trainerOptional != null) {
+            // Eliminar la imagen del entrenador si existe
+            if (trainerOptional.getPathImageProfile() != null && !trainerOptional.getPathImageProfile().isEmpty()) {
+                warehouseServiceImp.deleteFile(trainerOptional.getPathImageProfile());
+            }
+            trainerService.deleteTrainerById(idTrainer);
+        }
+        return new ModelAndView("redirect:/admin/trainers");
+    }
 }
