@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="https://www.thymeleaf.org/"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layout.html}">
 <head>
     <meta charset="UTF-8">
@@ -99,7 +100,8 @@
         <div class="hero-section p-5 text-center mb-5">
             <h1 class="display-4 fw-bold mb-3">Descubre Nuestras Membresías</h1>
             <p class="lead">Elige el plan perfecto para ti y empieza a disfrutar de todos nuestros beneficios.</p>
-            <a href="/admin/memberships/new" class="btn btn-light btn-lg mt-3">
+            <a href="/admin/memberships/new" class="btn btn-light btn-lg mt-3"
+               sec:authorize="hasRole('ADMIN')">
                 <i class="bi bi-plus-circle me-2"></i>Agregar Nueva Membresía
             </a>
         </div>

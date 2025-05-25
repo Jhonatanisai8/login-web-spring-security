@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="https://www.thymeleaf.org/"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layout.html}">
 
 <head>
@@ -63,7 +64,8 @@
         <div class="card shadow-lg mb-4">
             <div class="card-header bg-morado text-white d-flex justify-content-between align-items-center">
                 <h1 class="mb-0 h3">Gestión de Entrenadores</h1>
-                <a href="/admin/trainers/new" class="btn btn-sm btn-light">
+                <a href="/admin/trainers/new" class="btn btn-sm btn-light"
+                   sec:authorize="hasRole('ADMIN')">
                     <i class="bi bi-plus-circle me-2"></i>Agregar Entrenador
                 </a>
             </div>
@@ -81,7 +83,7 @@
                             <th scope="col">Género</th>
                             <th scope="col">Especialidades</th>
                             <th scope="col">F. Registro</th>
-                            <th scope="col" style="width: 180px;">Acciones</th>
+                            <th scope="col" style="width: 180px;" sec:authorize="hasRole('ADMIN')">Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -109,12 +111,14 @@
                             <td>
                                 <div class="d-flex gap-2">
                                     <a th:href="@{/admin/trainers/{idTrainer}/edit(idTrainer=*{idTrainer})}"
-                                       class="btn btn-morado btn-sm">
+                                       class="btn btn-morado btn-sm"
+                                       sec:authorize="hasRole('ADMIN')">
                                         <i class="bi bi-pencil me-1"></i>Editar
                                     </a>
                                     <button type="button" class="btn btn-outline-danger btn-sm"
                                             data-bs-toggle="modal"
-                                            th:data-bs-target="${'#deleteModal-' + trainer.idTrainer}">
+                                            th:data-bs-target="${'#deleteModal-' + trainer.idTrainer}"
+                                            sec:authorize="hasRole('ADMIN')">
                                         <i class="bi bi-trash me-1"></i>Eliminar
                                     </button>
                                 </div>
