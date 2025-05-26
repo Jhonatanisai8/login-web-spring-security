@@ -1,95 +1,283 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="https://www.thymeleaf.org/"
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout.html}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrar Tipos de Membresía</title>
-    <style>
+    <title>Planes de Membresía</title>
+    <style layout:fragment="styles">
         /* Estilos generales para el hero section y tarjetas */
-        .card-img-top {
-            height: 200px; /* Ajusta la altura de la imagen de la membresía */
-            object-fit: cover;
-            border-radius: 0.5rem 0.5rem 0 0;
+        .hero-section {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            color: white;
+            border-radius: 1.5rem; /* Bordes más redondeados */
+            overflow: hidden;
+            padding: 4rem 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
         }
 
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-section p.lead {
+            font-size: 1.5rem;
+            opacity: 0.9;
+        }
+
+        /* Estilos de las tarjetas de membresía */
         .card {
+            border: none;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra por defecto */
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            height: 100%; /* Asegura que todas las tarjetas tengan la misma altura */
+            height: 100%;
             display: flex;
             flex-direction: column;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
         }
 
-        .card-title {
-            font-size: 1.25rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 0.5rem;
+        .card-img-top {
+            height: 220px;
+            object-fit: cover;
+            border-radius: 1rem 1rem 0 0;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-img-top {
+            transform: scale(1.03); /* Ligeramente más grande al hacer hover */
         }
 
         .card-body {
-            flex-grow: 1; /* Permite que el cuerpo de la tarjeta ocupe el espacio disponible */
+            padding: 1.5rem; /* Más padding interno */
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
 
-        .hero-section {
-            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%); /* Tonos de verde para membresías */
-            color: white;
-            border-radius: 1rem;
+        .card-title {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #343a40;
+            margin-bottom: 1rem;
+            white-space: normal;
             overflow: hidden;
-            padding: 3rem 2rem; /* Ajusta el padding */
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
 
-        .memberships-section {
-            margin-bottom: 6rem;
+        .card-text {
+            font-size: 0.95rem;
+            color: #6c757d;
+            margin-bottom: 0.75rem;
         }
 
-        .card-col {
-            margin-bottom: 2rem;
-        }
-
-        /* Estilos específicos para badges e íconos */
-        .badge-info {
-            background-color: #17a2b8; /* Azul claro */
-            color: white;
-        }
-
-        .badge-success {
-            background-color: #28a745; /* Verde */
-            color: white;
+        .card-text i {
+            margin-right: 0.5rem;
+            color: #5863F8;
         }
 
         .text-precio {
-            font-size: 1.5rem;
+            font-size: 2.2rem;
             font-weight: bold;
-            color: #28a745; /* Color verde para el precio */
+            color: #28a745;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
         }
 
-        .small-icon {
-            font-size: 0.9em; /* Íconos un poco más pequeños */
-        }
-
-        .truncate-text {
+        .truncate-text-description {
             display: -webkit-box;
-            -webkit-line-clamp: 3; /* Limita a 3 líneas */
+            -webkit-line-clamp: 3;
+            /* Limita a 3 líneas */
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+            color: #495057;
+        }
+
+        .truncate-text-benefits {
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            /* Limita a 4 líneas para beneficios */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            color: #17a2b8;
+            font-weight: 500;
+        }
+
+        /* Estilos para badges de estado */
+        .badge-status {
+            font-size: 1.1rem;
+            padding: 0.6em 1em;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .badge-status i {
+            font-size: 1.25rem;
+        }
+
+        /* Botones de acción más grandes y visibles */
+        .btn-action-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .btn-action-admin, .btn-action-user {
+            padding: 0.75rem 1.5rem;
+            font-size: 1.15rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .btn-action-admin:hover, .btn-action-user:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-action-admin i, .btn-action-user i {
+            font-size: 1.4rem;
+        }
+
+        /* Estilo para el botón "Agregar Nueva Membresía" en el hero */
+        .hero-section .btn {
+            font-size: 1.25rem;
+            padding: 0.75rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Paginación mejorada */
+        .pagination .page-link {
+            border-radius: 0.5rem !important;
+            margin: 0 0.25rem;
+            min-width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: 500;
         }
 
         .pagination .page-item.active .page-link {
-            background-color: #5863F8;
-            border-color: #5863F8;
-            color: #fff;
+            background-color: #5863F8 !important;
+            border-color: #5863F8 !important;
+            color: #fff !important;
+            box-shadow: 0 4px 8px rgba(88, 99, 248, 0.3);
+        }
+
+        .pagination .page-link:hover {
+            background-color: #464edb;
+            border-color: #464edb;
+        }
+
+
+        /* Responsividad básica */
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-section p.lead {
+                font-size: 1.2rem;
+            }
+
+            .card-title {
+                font-size: 1.5rem;
+            }
+
+            .text-precio {
+                font-size: 1.8rem;
+            }
+
+            .btn-action-admin, .btn-action-user {
+                font-size: 1rem;
+                padding: 0.6rem 1rem;
+                gap: 0.4rem;
+            }
+
+            .btn-action-admin i, .btn-action-user i {
+                font-size: 1.2rem;
+            }
+
+            .badge-status {
+                font-size: 0.9rem;
+                padding: 0.4em 0.7em;
+            }
+
+            .badge-status i {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-section {
+                padding: 2.5rem 1.5rem;
+                border-radius: 1rem;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .hero-section p.lead {
+                font-size: 1rem;
+            }
+
+            .card-img-top {
+                height: 180px;
+            }
+
+            .card-title {
+                font-size: 1.3rem;
+            }
+
+            .text-precio {
+                font-size: 1.6rem;
+            }
+
+            .btn-action-group {
+                flex-direction: column; /* Apila los botones en móviles pequeños */
+                gap: 0.75rem;
+            }
+
+            .btn-action-admin, .btn-action-user {
+                width: 100%; /* Ocupan todo el ancho */
+                justify-content: center; /* Centra el contenido */
+            }
+
+            .pagination .page-link {
+                min-width: 38px;
+                height: 38px;
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -97,73 +285,85 @@
 <body>
 <div layout:fragment="content">
     <div class="container my-5">
-        <div class="hero-section p-5 text-center mb-5">
-            <h1 class="display-4 fw-bold mb-3">Descubre Nuestras Membresías</h1>
-            <p class="lead">Elige el plan perfecto para ti y empieza a disfrutar de todos nuestros beneficios.</p>
-            <a href="/admin/memberships/new" class="btn btn-light btn-lg mt-3"
+        <div class="hero-section text-center">
+            <h1 class="fw-bold">Descubre Nuestros Planes de Membresía</h1>
+            <p class="lead">Elige la opción que mejor se adapte a tus necesidades y comienza a disfrutar de todos los
+                beneficios hoy mismo.</p>
+            <a href="/admin/memberships/new" class="btn btn-light mt-4"
                sec:authorize="hasRole('ADMIN')">
                 <i class="bi bi-plus-circle me-2"></i>Agregar Nueva Membresía
             </a>
         </div>
 
-        <div class="memberships-section">
-            <h4 class="text-primary mb-4 fw-semibold">Planes Disponibles</h4>
+        <div class="memberships-section mt-5">
+            <h3 class="text-primary mb-4 fw-semibold text-center">Explora las Opciones Disponibles</h3>
+            <div th:if="${membershipTypesPage.content.isEmpty()}" class="alert alert-info text-center mt-5 py-4"
+                 role="alert">
+                <i class="bi bi-info-circle fs-3 me-2"></i>
+                <p class="mb-0 fs-5">¡Ups! Parece que no hay planes de membresía disponibles en este momento.</p>
+                <p class="mb-0 fs-6 text-muted">Vuelve más tarde o contacta al administrador.</p>
+            </div>
+
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-                <div class="col card-col" th:each="membership : ${membershipTypesPage.content}"
+                <div class="col" th:each="membership : ${membershipTypesPage.content}"
                      th:object="${membership}">
-                    <div class="card shadow-sm">
+                    <div class="card">
                         <img th:src="@{/assets/{filename}(filename=*{pathImageProfile})}"
                              th:alt="*{membershipName}"
                              class="card-img-top">
                         <div class="card-body">
-                            <h5 class="card-title fw-semibold text-dark" th:text="*{membershipName}"></h5>
-                            <p class="card-text text-muted small mb-2">
-                                <i class="bi bi-tag small-icon me-1"></i>Código: <span
-                                    th:text="*{membershipCode}"></span>
+                            <h5 class="card-title" th:text="*{membershipName}"></h5>
+                            <p class="card-text">
+                                <i class="bi bi-qr-code"></i>Código: <span th:text="*{membershipCode}"></span>
                             </p>
-                            <p class="card-text text-muted small mb-2">
-                                <i class="bi bi-calendar-check small-icon me-1"></i>Duración: <span
+                            <p class="card-text">
+                                <i class="bi bi-hourglass-split"></i>Duración: <span
                                     th:text="*{durationDays} + ' días'"></span>
                             </p>
-                            <p class="card-text text-muted small mb-2">
-                                <i class="bi bi-person-up small-icon me-1"></i>Accesos mensuales: <span
+                            <p class="card-text">
+                                <i class="bi bi-person-walking"></i>Accesos mensuales: <span
                                     th:text="*{monthlyAccesses}"></span>
                             </p>
-                            <p class="card-text text-muted small mb-3">
-                                <i class="bi bi-calendar-event me-1"></i>Creación: <span
+                            <p class="card-text">
+                                <i class="bi bi-calendar-plus"></i>Creación: <span
                                     th:text="${#dates.format(membership.creationDate, 'dd-MM-yyyy')}"></span>
                             </p>
-                            <p class="card-text text-success text-precio mb-3">
+                            <p class="text-precio text-center">
                                 <span th:text="${#numbers.formatCurrency(membership.price)}"></span>
                             </p>
 
-                            <div class="mb-3">
-                                <p class="card-text small text-secondary truncate-text" th:text="*{description}"></p>
-                                <p class="card-text small text-info truncate-text" th:text="*{benefits}"></p>
+                            <div class="flex-grow-1"><p class="card-text small truncate-text-description">
+                                <i class="bi bi-info-circle"></i>Descripción: <span th:text="*{description}"></span>
+                            </p>
+                                <p class="card-text small truncate-text-benefits">
+                                    <i class="bi bi-star"></i>Beneficios: <span th:text="*{benefits}"></span>
+                                </p>
                             </div>
 
-                            <div class="mt-auto d-flex justify-content-between align-items-center">
-                                <span th:if="*{active}" class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Activo</span>
-                                <span th:unless="*{active}" class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Inactivo</span>
+                            <div class="mt-auto d-flex flex-column align-items-center justify-content-center"> <span
+                                    th:if="*{active}" class="badge bg-success badge-status mb-3">
+                                    <i class="bi bi-check-circle"></i>Activo
+                                </span>
+                                <span th:unless="*{active}" class="badge bg-danger badge-status mb-3">
+                                    <i class="bi bi-x-circle"></i>Inactivo
+                                </span>
 
-                                <div class="btn-group" role="group" aria-label="Acciones de Membresía">
-                                    <!-- Botones para ADMIN sin btn-sm para mayor tamaño -->
+                                <div class="btn-action-group">
                                     <a th:href="@{/admin/memberships/{idMembershipType}/edit(idMembershipType=*{idMembershipType})}"
-                                       class="btn btn-outline-primary"
+                                       class="btn btn-outline-primary btn-action-admin"
                                        sec:authorize="hasRole('ADMIN')">
-                                        <i class="bi bi-pencil">Editar</i>
+                                        <i class="bi bi-pencil"></i>Editar
                                     </a>
-                                    <button type="button" class="btn btn-outline-danger"
+                                    <button type="button" class="btn btn-outline-danger btn-action-admin"
                                             data-bs-toggle="modal"
                                             th:data-bs-target="${'#deleteModal-' + membership.idMembershipType}"
                                             sec:authorize="hasRole('ADMIN')">
-                                        <i class="bi bi-trash">Eliminar</i>
+                                        <i class="bi bi-trash"></i>Eliminar
                                     </button>
-                                    <!-- Botón comprar para USER con btn-sm -->
                                     <a th:href="@{/client/memberships/{idMembershipType}/purchase(idMembershipType=*{idMembershipType})}"
-                                       class="btn btn-outline-success btn-sm"
+                                       class="btn btn-success btn-action-user"
                                        sec:authorize="hasRole('USER')">
-                                        <i class="bi bi-cart-check"></i> Comprar
+                                        <i class="bi bi-cart-check"></i>Comprar Plan
                                     </a>
                                 </div>
                             </div>
@@ -198,14 +398,10 @@
                     </div>
                 </div>
             </div>
-            <div th:if="${membershipTypesPage.content.isEmpty()}" class="alert alert-info text-center mt-5"
-                 role="alert">
-                No hay tipos de membresía disponibles en este momento.
-            </div>
         </div>
 
-        <div th:if="${membershipTypesPage.totalPages > 0}" class="d-flex justify-content-center mt-4">
-            <nav aria-label="Paginación de tipos de membresía">
+        <div th:if="${membershipTypesPage.totalPages > 0}" class="d-flex justify-content-center mt-5">
+            <nav aria-label="Paginación de planes de membresía">
                 <ul class="pagination pagination-lg">
                     <li class="page-item"
                         th:classappend="${membershipTypesPage.hasPrevious()} ? '' : 'disabled'">
