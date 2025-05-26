@@ -1,6 +1,6 @@
 package com.isai.demologinspringboot.app.repositorys;
 
-import com.isai.demologinspringboot.app.models.UserEntity;
+import com.isai.demologinspringboot.app.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository
-        extends JpaRepository<UserEntity, Long> {
+        extends JpaRepository<User, Long> {
 
-    Optional<UserEntity> findByUserName(String userName);
+    Optional<User> findByUserName(String userName);
 }

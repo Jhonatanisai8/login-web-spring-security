@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="https://www.thymeleaf.org/"
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
-      layout:decorate="~{layout.html}">
-
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrar Clientes</title>
-    <style>
+    <title>Administrar Usuarios</title>
+    <style layout:fragment="styles">
         .img-thumbnail {
             max-width: 120px;
             height: auto;
@@ -63,10 +60,10 @@
     <div class="container my-5">
         <div class="card shadow-lg mb-4">
             <div class="card-header bg-morado text-white d-flex justify-content-between align-items-center">
-                <h1 class="mb-0 h3">Gestión de Clientes</h1>
+                <h1 class="mb-0 h3">Gestión de Usuarios</h1>
                 <a href="/admin/clients/new" class="btn btn-sm btn-light"
                    sec:authorize="hasRole('ADMIN')">
-                <i class="bi bi-plus-circle me-2"></i>Agregar Cliente
+                    <i class="bi bi-plus-circle me-2"></i>Agregar Usuario
                 </a>
             </div>
 
@@ -77,16 +74,19 @@
                         <tr>
                             <th scope="col" style="width: 150px;">Foto</th>
                             <th scope="col">Nombre Completo</th>
+                            <th scope="col">Nombre de Usuario</th>
                             <th scope="col">DNI</th>
                             <th scope="col">Correo</th>
+                            <th scope="col">Teléfono</th>
                             <th scope="col">F. Nacimiento</th>
                             <th scope="col">Género</th>
                             <th scope="col">F. Registro</th>
-                            <th scope="col" style="width: 180px;">Acciones</th>
+                            <th scope="col">Roles</th>
+                            <th sec:authorize="hasRole('ADMIN')" scope="col" style="width: 180px;">Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="client : ${clients.content}" th:object="${client}">
+                        <tr th:each="user : ${users.content}" th:object="${user}">
                             <td>
                                 <a th:href="@{/assets/{filename}(filename=*{pathImageProfile})}"
                                    data-fancybox="gallery" data-caption="Foto de perfil">
@@ -97,39 +97,47 @@
                             <td>
                                 <div th:text="*{firstName + ' ' + lastName}" class="fw-semibold fs-5 mb-2"></div>
                             </td>
-                            <td th:text="*{dniClient}"></td>
+                            <td th:text="*{userName}"></td>
+                            <td th:text="*{dni}"></td>
                             <td th:text="*{email}"></td>
-                            <td th:text="${#temporals.format(client.birthDate, 'dd-MM-yyyy')}"></td>
-                            <td th:text="*{gender == 'M' ? 'Masculino' : 'Femenino'}"></td>
-                            <td th:text="${#temporals.format(client.dateRegistration, 'dd-MM-yyyy')}"></td>
+                            <td th:text="*{phone}"></td>
+                            <td th:text="${#temporals.format(user.birthDate, 'dd-MM-yyyy')}"></td>
+                            <td th:text="*{gender == 'M' ? 'Masculino' : (gender == 'F' ? 'Femenino' : 'N/A')}"></td>
+                            <td th:text="${#temporals.format(user.registrationDate, 'dd-MM-yyyy')}"></td>
                             <td>
+                                <span th:each="rol, iterStat : *{roles}">
+                                    <span th:text="${rol.nameRol}"></span>
+                                    <span th:if="${!iterStat.last}">, </span>
+                                </span>
+                                <span th:if="*{roles.empty}">Sin roles</span>
+                            </td>
+                            <td sec:authorize="hasRole('ADMIN')">
                                 <div class="d-flex gap-2">
-                                    <a th:href="@{/admin/clients/{idClient}/edit(idClient=*{idClient})}"
+                                    <a th:href="@{/admin/clients/{id}/edit(id=*{id})}"
                                        class="btn btn-morado btn-sm">
                                         <i class="bi bi-pencil me-1"></i>Editar
                                     </a>
                                     <button type="button" class="btn btn-outline-danger btn-sm"
                                             data-bs-toggle="modal"
-                                            th:data-bs-target="${'#deleteModal-' + client.idClient}"
-                                            sec:authorize="hasRole('ADMIN')">
+                                            th:data-bs-target="${'#deleteModal-' + user.id}">
                                         <i class="bi bi-trash me-1"></i>Eliminar
                                     </button>
                                 </div>
 
-                                <div class="modal fade" th:id="${'deleteModal-' + client.idClient}" tabindex="-1"
-                                     th:aria-labelledby="${'deleteModalLabel-' + client.idClient}" aria-hidden="true">
+                                <div class="modal fade" th:id="${'deleteModal-' + user.id}" tabindex="-1"
+                                     th:aria-labelledby="${'deleteModalLabel-' + user.id}" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header bg-danger text-white">
                                                 <h5 class="modal-title"
-                                                    th:id="${'deleteModalLabel-' + client.idClient}">
+                                                    th:id="${'deleteModalLabel-' + user.id}">
                                                     Confirmar Eliminación
                                                 </h5>
                                                 <button type="button" class="btn-close btn-close-white"
                                                         data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                ¿Estás seguro de que deseas eliminar al cliente "<strong
+                                                ¿Estás seguro de que deseas eliminar al usuario "<strong
                                                     th:text="*{firstName + ' ' + lastName}"></strong>"? Esta acción no
                                                 se puede deshacer.
                                             </div>
@@ -138,8 +146,7 @@
                                                         data-bs-dismiss="modal">
                                                     Cancelar
                                                 </button>
-                                                <a th:href="@{/admin/clients/{idClient}/remove(idClient=*{idClient})}"
-                                                   sec:authorize="hasRole('ADMIN')"
+                                                <a th:href="@{/admin/clients/{id}/remove(id=*{id})}"
                                                    class="btn btn-morado">Eliminar</a>
                                             </div>
                                         </div>
@@ -151,27 +158,27 @@
                     </table>
                 </div>
 
-                <div th:if="${clients.totalPages > 0}" class="d-flex justify-content-center mt-4">
-                    <nav aria-label="Paginación de clientes">
+                <div th:if="${users.totalPages > 0}" class="d-flex justify-content-center mt-4">
+                    <nav aria-label="Paginación de usuarios">
                         <ul class="pagination pagination-lg">
                             <li class="page-item"
-                                th:classappend="${clients.hasPrevious()} ? '' : 'disabled'">
+                                th:classappend="${users.hasPrevious()} ? '' : 'disabled'">
                                 <a class="page-link"
-                                   th:href="@{/admin(page=${clients.number - 1})}"
+                                   th:href="@{/admin/users(page=${users.number - 1})}"
                                    aria-label="Anterior">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
                             <li class="page-item"
-                                th:each="pageNumber : ${#numbers.sequence(0, clients.totalPages - 1)}"
-                                th:classappend="${pageNumber == clients.number} ? 'active' : ''">
+                                th:each="pageNumber : ${#numbers.sequence(0, users.totalPages - 1)}"
+                                th:classappend="${pageNumber == users.number} ? 'active' : ''">
                                 <a class="page-link"
-                                   th:href="@{/admin/clients(page=${pageNumber})}"
+                                   th:href="@{/admin/users(page=${pageNumber})}"
                                    th:text="${pageNumber + 1}"></a></li>
                             <li class="page-item"
-                                th:classappend="${clients.hasNext()} ? '' : 'disabled'">
+                                th:classappend="${users.hasNext()} ? '' : 'disabled'">
                                 <a class="page-link"
-                                   th:href="@{/admin/clients(page=${clients.number + 1})}"
+                                   th:href="@{/admin/users(page=${users.number + 1})}"
                                    aria-label="Siguiente">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>

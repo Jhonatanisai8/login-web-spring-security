@@ -1,8 +1,7 @@
-package com.isai.demologinspringboot.app.dtos;
+package com.isai.demologinspringboot.app.models;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,18 +11,23 @@ import java.util.Set;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequest {
+@Builder
+@Entity
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Los Nombres no pueden estar vacíos")
+    // Datos personales
+    @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 50)
     private String firstName;
 
-    @NotBlank(message = "Los apellidos no pueden estar vacíos")
+    @NotBlank(message = "El apellido es obligatorio")
     @Size(max = 50)
     private String lastName;
 
@@ -31,9 +35,9 @@ public class UserRequest {
     @Size(max = 10)
     private String userName;
 
-    @NotBlank(message = "El Email no puede estar vacío")
-    @Size(max = 40)
+    @NotBlank(message = "El correo es obligatorio")
     @Email(message = "Correo inválido")
+    @Size(max = 40)
     private String email;
 
     @NotBlank(message = "La contraseña es obligatoria")
@@ -49,6 +53,7 @@ public class UserRequest {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate birthDate;
 
+    @Size(max = 10)
     private String gender;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -56,7 +61,14 @@ public class UserRequest {
 
     private String pathImageProfile;
 
+    @Transient
     private MultipartFile imageProfile;
 
-    private Set<String> roles;  // O Set<Long> si manejas los IDs de roles
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "idRol")
+    )
+    private Set<Rol> roles;
 }

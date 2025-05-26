@@ -1,17 +1,14 @@
 package com.isai.demologinspringboot.app.services;
 
 import com.isai.demologinspringboot.app.models.Rol;
-import com.isai.demologinspringboot.app.models.UserEntity;
+import com.isai.demologinspringboot.app.models.User;
 import com.isai.demologinspringboot.app.repositorys.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,22 +20,18 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userDB = userRepository.findByUserName(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        User userDB = userRepository.findByUserName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
 
-        //autoridades (roles) para el usuario
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        userDB.getRoles()
-                .forEach(rol -> {
-                    authorities.add(new SimpleGrantedAuthority(rol.getNameRol()));
-                });
+        for (Rol rol : userDB.getRoles()) {
+            authorities.add(new SimpleGrantedAuthority(rol.getNameRol()));
+        }
 
-        //user de spring security
-        return new User(
+        return new org.springframework.security.core.userdetails.User(
                 userDB.getUserName(),
-                userDB.getPasswordUser(),
+                userDB.getPassword(),
                 authorities
         );
     }
-
 }
