@@ -147,15 +147,24 @@
                                 <span th:unless="*{active}" class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Inactivo</span>
 
                                 <div class="btn-group" role="group" aria-label="Acciones de Membresía">
+                                    <!-- Botones para ADMIN -->
                                     <a th:href="@{/admin/memberships/{idMembershipType}/edit(idMembershipType=*{idMembershipType})}"
-                                       class="btn btn-outline-primary btn-sm">
+                                       class="btn btn-outline-primary btn-sm"
+                                       sec:authorize="hasRole('ADMIN')">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <button type="button" class="btn btn-outline-danger btn-sm"
                                             data-bs-toggle="modal"
-                                            th:data-bs-target="${'#deleteModal-' + membership.idMembershipType}">
+                                            th:data-bs-target="${'#deleteModal-' + membership.idMembershipType}"
+                                            sec:authorize="hasRole('ADMIN')">
                                         <i class="bi bi-trash"></i>
                                     </button>
+                                    <!-- Botón comprar para USER -->
+                                    <a th:href="@{/client/memberships/{idMembershipType}/purchase(idMembershipType=*{idMembershipType})}"
+                                       class="btn btn-outline-success btn-sm"
+                                       sec:authorize="hasRole('USER')">
+                                        <i class="bi bi-cart-check"></i> Comprar
+                                    </a>
                                 </div>
                             </div>
                         </div>
