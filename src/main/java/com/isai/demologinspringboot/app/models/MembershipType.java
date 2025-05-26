@@ -67,4 +67,8 @@ public class MembershipType {
 
     @OneToMany(mappedBy = "membershipType")
     private List<MembershipUser> users;
+
+    @OneToMany(mappedBy = "membershipType")
+    private List<Payment> payments;
+
 }

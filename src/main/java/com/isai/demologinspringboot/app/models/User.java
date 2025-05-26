@@ -75,4 +75,8 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<MembershipUser> memberships;
+
+    @OneToMany(mappedBy = "user")
+    private List<Payment> payments;
+
 }
