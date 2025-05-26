@@ -13,4 +13,5 @@ public interface MembershipTypeCrud {
 
     Page<MembershipType> findAllMembershipTypes(Pageable pageable);
 
+    MembershipType findMembershipTypeById(Integer id);
 }

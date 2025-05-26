@@ -31,4 +31,9 @@ public class MembershipTypeService
     public Page<MembershipType> findAllMembershipTypes(Pageable pageable) {
         return membershipTypeRepository.findAll(pageable);
     }
+
+    @Override
+    public MembershipType findMembershipTypeById(Integer id) {
+        return membershipTypeRepository.findById(id).orElseThrow();
+    }
 }

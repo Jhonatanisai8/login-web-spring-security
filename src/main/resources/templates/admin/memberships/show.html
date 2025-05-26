@@ -285,6 +285,18 @@
 <body>
 <div layout:fragment="content">
     <div class="container my-5">
+        <!--  los mensajes flash -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
         <div class="hero-section text-center">
             <h1 class="fw-bold">Descubre Nuestros Planes de Membresía</h1>
             <p class="lead">Elige la opción que mejor se adapte a tus necesidades y comienza a disfrutar de todos los
@@ -362,11 +374,16 @@
                                             sec:authorize="hasRole('ADMIN')">
                                         <i class="bi bi-trash"></i>Eliminar
                                     </button>
-                                    <a th:href="@{/client/memberships/{idMembershipType}/purchase(idMembershipType=*{idMembershipType})}"
-                                       class="btn btn-success btn-action-user"
-                                       sec:authorize="hasRole('USER')">
-                                        <i class="bi bi-cart-check"></i>Comprar Plan
-                                    </a>
+                                    <form th:action="@{/client/buy-membership}" method="post">
+                                        <input type="hidden" name="idMembershipType"
+                                               th:value="${membership.idMembershipType}">
+                                        <button type="submit"
+                                                class="btn btn-success btn-action-user"
+                                                sec:authorize="hasRole('USER')">
+                                            <i class="bi bi-cart-plus"></i> Comprar
+                                        </button>
+                                    </form>
+
                                 </div>
                             </div>
                         </div>
