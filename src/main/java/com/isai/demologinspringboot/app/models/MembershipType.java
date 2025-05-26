@@ -23,7 +23,7 @@ public class MembershipType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idMembershipType;
 
-    @Size(max = 10)
+    @Size(max = 20)
     @NotEmpty
     private String membershipCode;
 

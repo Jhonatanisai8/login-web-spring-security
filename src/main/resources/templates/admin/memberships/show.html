@@ -147,19 +147,19 @@
                                 <span th:unless="*{active}" class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>Inactivo</span>
 
                                 <div class="btn-group" role="group" aria-label="Acciones de Membresía">
-                                    <!-- Botones para ADMIN -->
+                                    <!-- Botones para ADMIN sin btn-sm para mayor tamaño -->
                                     <a th:href="@{/admin/memberships/{idMembershipType}/edit(idMembershipType=*{idMembershipType})}"
-                                       class="btn btn-outline-primary btn-sm"
+                                       class="btn btn-outline-primary"
                                        sec:authorize="hasRole('ADMIN')">
-                                        <i class="bi bi-pencil"></i>
+                                        <i class="bi bi-pencil">Editar</i>
                                     </a>
-                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                    <button type="button" class="btn btn-outline-danger"
                                             data-bs-toggle="modal"
                                             th:data-bs-target="${'#deleteModal-' + membership.idMembershipType}"
                                             sec:authorize="hasRole('ADMIN')">
-                                        <i class="bi bi-trash"></i>
+                                        <i class="bi bi-trash">Eliminar</i>
                                     </button>
-                                    <!-- Botón comprar para USER -->
+                                    <!-- Botón comprar para USER con btn-sm -->
                                     <a th:href="@{/client/memberships/{idMembershipType}/purchase(idMembershipType=*{idMembershipType})}"
                                        class="btn btn-outline-success btn-sm"
                                        sec:authorize="hasRole('USER')">
