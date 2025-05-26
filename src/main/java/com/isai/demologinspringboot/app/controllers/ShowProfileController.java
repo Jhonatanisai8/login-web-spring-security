@@ -1,7 +1,9 @@
 package com.isai.demologinspringboot.app.controllers;
 
+import com.isai.demologinspringboot.app.models.MembershipUser;
 import com.isai.demologinspringboot.app.models.User;
 import com.isai.demologinspringboot.app.repositorys.UserRepository;
+import com.isai.demologinspringboot.app.services.impl.MembershipUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class ShowProfileController {
 
     private final UserRepository userRepository;
+
+    private final MembershipUserService membershipUserService;
 
     @GetMapping("/profile")
     public ModelAndView showClientProfile(@AuthenticationPrincipal UserDetails userDetails) {
@@ -51,5 +55,20 @@ public class ShowProfileController {
         redirectAttributes.addFlashAttribute("success", "Perfil actualizado correctamente");
         return "redirect:/client/profile";
     }
+
+
+    @GetMapping("/membership")
+    public String showCurrentMembership(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        User user = userRepository.findByUserName(userDetails.getUsername())
+                .orElseThrow();
+
+        MembershipUser membershipUser = membershipUserService
+                .findByUserAndStatus(user, true)
+                .orElse(null);
+
+        model.addAttribute("userMembership", membershipUser);
+        return "client/my-membership";
+    }
+
 
 }

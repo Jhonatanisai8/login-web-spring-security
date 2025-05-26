@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,5 +43,10 @@ public class MembershipUserService implements MembershipUserCrud {
         membershipUserRepository.save(userMembership);
     }
 
-
+    @Override
+    public Optional<MembershipUser> findByUserAndStatus(User user, Boolean status) {
+        return membershipUserRepository.findByUserAndStatus(
+                user,
+                status);
+    }
 }

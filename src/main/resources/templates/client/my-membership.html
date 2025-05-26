@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Membresía</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Mi Membresía</h2>
+
+        <div th:if="${userMembership != null}">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0" th:text="${userMembership.membershipType.membershipName}">Nombre Membresía</h5>
+                    <span class="badge bg-light text-success"
+                          th:text="${userMembership.status ? 'Activa' : 'Inactiva'}"></span>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Código:</strong> <span
+                                th:text="${userMembership.membershipType.membershipCode}"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Duración (días):</strong> <span
+                                th:text="${userMembership.membershipType.durationDays}"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Inicio:</strong> <span th:text="${userMembership.startDate}"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Fin:</strong> <span th:text="${userMembership.endDate}"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Precio Pagado:</strong> S/. <span th:text="${userMembership.pricePaid}"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Accesos Restantes:</strong> <span
+                                th:text="${userMembership.remainingAccesses}"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Accesos Mensuales:</strong> <span
+                                th:text="${userMembership.membershipType.monthlyAccesses}"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Renovación Automática:</strong>
+                            <span th:text="${userMembership.automaticRenewal ? 'Sí' : 'No'}"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Última Renovación:</strong> <span
+                                th:text="${userMembership.lastRenewalDate}"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Fecha de Registro:</strong> <span
+                                th:text="${userMembership.membershipType.creationDate}"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Beneficios:</strong>
+                        <p class="mb-0" th:text="${userMembership.membershipType.benefits}"></p>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Restricciones:</strong>
+                        <p class="mb-0" th:text="${userMembership.membershipType.restrictionsMembershipType}"></p>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Descripción:</strong>
+                        <p class="mb-0" th:text="${userMembership.membershipType.description}"></p>
+                    </div>
+
+                    <div class="text-center" th:if="${userMembership.membershipType.pathImageProfile != null}">
+                        <img class="img-fluid rounded mt-3"
+                             style="max-height: 200px;"
+                             th:src="@{/assets/{filename}(filename=${userMembership.membershipType.pathImageProfile})}"
+                             alt="Imagen de la Membresía"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${userMembership == null}" class="alert alert-warning text-center" role="alert">
+            <p class="mb-0">No tienes una membresía activa actualmente.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
