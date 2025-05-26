@@ -1,6 +1,7 @@
 package com.isai.demologinspringboot.app.controllers;
 
 import com.isai.demologinspringboot.app.models.MembershipUser;
+import com.isai.demologinspringboot.app.models.Payment;
 import com.isai.demologinspringboot.app.models.User;
 import com.isai.demologinspringboot.app.repositorys.UserRepository;
 import com.isai.demologinspringboot.app.services.impl.MembershipUserService;
@@ -12,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/client")
@@ -68,6 +71,15 @@ public class ShowProfileController {
 
         model.addAttribute("userMembership", membershipUser);
         return "client/my-membership";
+    }
+
+    @GetMapping("/my_payments")
+    public String myPayments(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        User user = userRepository.findByUserName(userDetails.getUsername())
+                .orElseThrow();
+        List<Payment> payments = user.getPayments(); // Asegúrate de que el User tenga esta relación
+        model.addAttribute("payments", payments);
+        return "client/my_payments";
     }
 
 

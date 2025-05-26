@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Pagos</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mt-5">
+    <h2 class="mb-4">Historial de Pagos</h2>
+
+    <div th:if="${payments != null and !payments.isEmpty()}">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Fecha de Pago</th>
+                    <th>Comprobante</th>
+                    <th>Concepto</th>
+                    <th>Monto (S/)</th>
+                    <th>Tipo de Membresía</th>
+                    <th>Observaciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p, iterStat : ${payments}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td th:text="${#temporals.format(p.fechaPago, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${p.numeroComprobante}"></td>
+                    <td th:text="${p.concepto}"></td>
+                    <td th:text="${p.montoPago}"></td>
+                    <td th:text="${p.membershipType.membershipName}"></td>
+                    <td th:text="${p.observaciones}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div th:if="${payments == null or payments.isEmpty()}">
+        <div class="alert alert-info" role="alert">
+            No tienes pagos registrados hasta el momento.
+        </div>
+    </div>
+</div>
+</body>
+</html>

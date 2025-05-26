@@ -41,6 +41,9 @@
                 <li class="nav-item" sec:authorize="hasRole('USER')">
                     <a class="nav-link text-secondary" th:href="@{/client/membership}">Mi Membresia</a>
                 </li>
+                <li class="nav-item" sec:authorize="hasRole('USER')">
+                    <a class="nav-link text-secondary" th:href="@{/client/my_payments}">Mis Pagos</a>
+                </li>
                 <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link text-secondary" th:href="@{/admin/clients}">Clientes</a>
                 </li>
