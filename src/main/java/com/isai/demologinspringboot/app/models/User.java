@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -71,4 +72,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "idRol")
     )
     private Set<Rol> roles;
+
+    @OneToMany(mappedBy = "user")
+    private List<MembershipUser> memberships;
 }

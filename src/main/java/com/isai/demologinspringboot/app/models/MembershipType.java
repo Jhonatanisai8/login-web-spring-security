@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -63,4 +64,7 @@ public class MembershipType {
 
     @Transient
     private MultipartFile imageProfile;
+
+    @OneToMany(mappedBy = "membershipType")
+    private List<MembershipUser> users;
 }

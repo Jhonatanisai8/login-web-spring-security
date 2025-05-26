@@ -63,7 +63,7 @@
                             <img th:src="@{/assets/{filename}(filename=${user.pathImageProfile})}"
                                  alt="Foto de perfil" class="profile-img"/>
                         </div>
-
+                        <input type="hidden" th:field="*{user.id}"/>
                         <p class="text-center text-muted mb-4">
                             ¡Bienvenido de nuevo, <span th:text="${user.firstName}"></span>! Aquí puedes ver y gestionar
                             tu información.
