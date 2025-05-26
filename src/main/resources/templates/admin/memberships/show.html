@@ -307,6 +307,8 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                 <div class="col" th:each="membership : ${membershipTypesPage.content}"
                      th:object="${membership}">
+                    <input type="hidden" name="idMembershipType" th:value="${membership.idMembershipType}">
+
                     <div class="card">
                         <img th:src="@{/assets/{filename}(filename=*{pathImageProfile})}"
                              th:alt="*{membershipName}"
