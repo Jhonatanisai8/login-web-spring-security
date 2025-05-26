@@ -47,28 +47,26 @@ public class UserController {
     }
 
     @PostMapping("/clients/new")
-    public ModelAndView registerCustomer(@Valid @ModelAttribute("client") User client, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors() || client.getImageProfile().isEmpty()) {
-            if (client.getImageProfile().isEmpty()) {
+    public ModelAndView registerCustomer(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors() || user.getImageProfile().isEmpty()) {
+            if (user.getImageProfile().isEmpty()) {
                 bindingResult.rejectValue("imageProfile", "MultipartNotEmpty", "La imagen es obligatoria");
             }
             List<Speciality> specialities = specialityRepository.findAll(Sort.by("nameSpeciality"));
             return new ModelAndView("admin/clients/create-client")
-                    .addObject("user", client)
+                    .addObject("user", user)
                     .addObject("specialities", specialities);
         }
 
-        String imageProfileName = warehouseServiceImp.storeFile(client.getImageProfile());
-        client.setPathImageProfile(imageProfileName);
-        LocalDate date = LocalDate.now();
-        client.setRegistrationDate(date);
+        String imageProfileName = warehouseServiceImp.storeFile(user.getImageProfile());
+        user.setPathImageProfile(imageProfileName);
+        user.setRegistrationDate(LocalDate.now());
+
         Rol rol = new Rol();
         rol.setNameRol("ROLE_USER");
-        client.setRoles(Set.of(rol));
-        client.setPassword(Utils.encryptPassword(client.getPassword()));
-        userRepository.save(client);
-
+        user.setRoles(Set.of(rol));
+        user.setPassword(Utils.encryptPassword(user.getPassword()));
+        userRepository.save(user);
 
         return new ModelAndView("redirect:/admin/clients");
     }
