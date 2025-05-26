@@ -18,7 +18,6 @@ public class ShowProfileController {
 
     private final UserRepository userRepository;
 
-    // Muestra el perfil del cliente
     @GetMapping("/profile")
     public ModelAndView showClientProfile(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByUserName(userDetails.getUsername()).get();
@@ -26,23 +25,19 @@ public class ShowProfileController {
                 .addObject("user", user);
     }
 
-    // Mostrar el formulario de edición del perfil
     @GetMapping("/edit-profile")
     public String showEditProfileForm(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         User user = userRepository.findByUserName(userDetails.getUsername()).get();
         model.addAttribute("user", user);
-        return "client/edit-profile"; // Vista del formulario de edición
+        return "client/edit-profile";
     }
 
-    // Procesar el formulario de edición
     @PostMapping("/edit-profile")
     public String updateProfile(@ModelAttribute("user") User updatedUser,
                                 @AuthenticationPrincipal UserDetails userDetails,
                                 RedirectAttributes redirectAttributes) {
-        // Obtener el usuario actual desde la base de datos
         User currentUser = userRepository.findByUserName(userDetails.getUsername()).orElseThrow();
 
-        // Actualizar los campos editables
         currentUser.setFirstName(updatedUser.getFirstName());
         currentUser.setLastName(updatedUser.getLastName());
         currentUser.setEmail(updatedUser.getEmail());
@@ -50,13 +45,11 @@ public class ShowProfileController {
         currentUser.setGender(updatedUser.getGender());
         currentUser.setBirthDate(updatedUser.getBirthDate());
         currentUser.setPhone(updatedUser.getPhone());
-        // Puedes añadir más campos según sea necesario
 
-        // Guardar cambios
         userRepository.save(currentUser);
 
-        // Mensaje de éxito
         redirectAttributes.addFlashAttribute("success", "Perfil actualizado correctamente");
         return "redirect:/client/profile";
     }
+
 }
