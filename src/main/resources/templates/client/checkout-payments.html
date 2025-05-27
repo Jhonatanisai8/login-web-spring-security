@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Compra y Pagar</title>
+    <style layout:fragment="styles">
+        .checkout-container {
+            padding: 3rem 0;
+        }
+        .checkout-card {
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background: #ffffff;
+        }
+        .checkout-summary-header {
+            background: linear-gradient(90deg, #5863F8 0%, #7c88ff 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 1.5rem 1.5rem 0 0;
+            text-align: center;
+        }
+        .checkout-summary-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .checkout-summary-body {
+            padding: 2.5rem;
+        }
+        .checkout-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px dashed #e9ecef;
+        }
+        .checkout-item:last-child {
+            border-bottom: none;
+        }
+        .checkout-item strong {
+            font-size: 1.1rem;
+            color: #343a40;
+            font-weight: 600;
+        }
+        .checkout-item span {
+            font-size: 1.1rem;
+            color: #555;
+        }
+        .checkout-total {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .checkout-total h4 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #28a745;
+        }
+        .payment-section {
+            background-color: #f8f9fa;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .payment-section h3 {
+            color: #5863F8;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 1rem;
+        }
+        .form-control {
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+        }
+        .btn-pay {
+            background-color: #28a745;
+            border-color: #28a745;
+            font-size: 1.25rem;
+            padding: 0.75rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-pay:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-cancel {
+            font-size: 1.1rem;
+            padding: 0.75rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .checkout-summary-header h2 {
+                font-size: 1.8rem;
+            }
+            .checkout-summary-body {
+                padding: 1.5rem;
+            }
+            .checkout-item strong, .checkout-item span {
+                font-size: 1rem;
+            }
+            .checkout-total h4 {
+                font-size: 1.5rem;
+            }
+            .payment-section {
+                padding: 1.5rem;
+            }
+            .payment-section h3 {
+                font-size: 1.5rem;
+            }
+            .btn-pay, .btn-cancel {
+                font-size: 1rem;
+                padding: 0.6rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="container checkout-container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card checkout-card">
+                <div class="checkout-summary-header">
+                    <h2>Confirmación de Compra</h2>
+                    <p class="lead mb-0">Revisa los detalles de tu membresía antes de pagar</p>
+                </div>
+                <div class="checkout-summary-body">
+                    <h4 class="mb-4 text-center text-secondary">Detalles del Plan: <span th:text="${membershipType.membershipName}"></span></h4>
+
+                    <div class="checkout-item">
+                        <strong><i class="bi bi-tag-fill me-2"></i>Código:</strong>
+                        <span><span th:text="${membershipType.membershipCode}"></span></span>
+                    </div>
+                    <div class="checkout-item">
+                        <strong><i class="bi bi-hourglass-split me-2"></i>Duración:</strong>
+                        <span><span th:text="${membershipType.durationDays}"></span> días</span>
+                    </div>
+                    <div class="checkout-item">
+                        <strong><i class="bi bi-person-walking me-2"></i>Accesos Mensuales:</strong>
+                        <span><span th:text="${membershipType.monthlyAccesses}"></span></span>
+                    </div>
+                    <div class="checkout-item">
+                        <strong><i class="bi bi-calendar-check me-2"></i>Fecha de Creación del Plan:</strong>
+                        <span><span th:text="${#dates.format(membershipType.creationDate, 'dd/MM/yyyy')}"></span></span>
+                    </div>
+                    <div class="checkout-item">
+                        <strong><i class="bi bi-card-text me-2"></i>Descripción:</strong>
+                        <span><span th:text="${membershipType.description}"></span></span>
+                    </div>
+                    <div class="checkout-item">
+                        <strong><i class="bi bi-star-fill me-2"></i>Beneficios:</strong>
+                        <span><span th:text="${membershipType.benefits}"></span></span>
+                    </div>
+
+                    <div class="checkout-total">
+                        <h4>Total a Pagar:</h4>
+                        <h4 class="text-success"><span th:text="${#numbers.formatCurrency(membershipType.price)}"></span></h4>
+                    </div>
+
+                    <div class="payment-section mt-5">
+                        <h3>Método de Pago</h3>
+                        <form th:action="@{/client/process-payment}" method="post">
+                            <input type="hidden" name="idMembershipType" th:value="${membershipType.idMembershipType}">
+
+                            <div class="mb-3">
+                                <label for="cardNumber" class="form-label">Número de Tarjeta (Simulacion)</label>
+                                <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="xxxx xxxx xxxx xxxx" required>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="expiryDate" class="form-label">Fecha de Caducidad (MM/AA)</label>
+                                    <input type="text" class="form-control" id="expiryDate" name="expiryDate" placeholder="MM/AA" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="cvv" class="form-label">CVV</label>
+                                    <input type="text" class="form-control" id="cvv" name="cvv" placeholder="123" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="cardHolderName" class="form-label">Nombre del Titular</label>
+                                <input type="text" class="form-control" id="cardHolderName" name="cardHolderName" required>
+                            </div>
+
+                            <div class="d-grid gap-3">
+                                <button type="submit" class="btn btn-pay">
+                                    <i class="bi bi-check-circle-fill me-2"></i> Confirmar y Pagar
+                                </button>
+                                <a th:href="@{/client/memberships}" class="btn btn-outline-secondary btn-cancel">
+                                    <i class="bi bi-x-circle-fill me-2"></i> Cancelar
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
