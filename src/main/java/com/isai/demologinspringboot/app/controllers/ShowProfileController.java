@@ -76,8 +76,8 @@ public class ShowProfileController {
     @GetMapping("/my_payments")
     public String myPayments(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         User user = userRepository.findByUserName(userDetails.getUsername())
-                .orElseThrow();
-        List<Payment> payments = user.getPayments(); // Asegúrate de que el User tenga esta relación
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        List<Payment> payments = user.getPayments();
         model.addAttribute("payments", payments);
         return "client/my_payments";
     }

@@ -5,45 +5,198 @@
       layout:decorate="~{layout.html}">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Pagos</title>
+    <style layout:fragment="styles">
+        /* Estilos generales para el contenedor de pagos */
+        .payments-container {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        /* Estilos para la tabla de pagos */
+        .payments-table {
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            background-color: #ffffff;
+            width: 100%;
+        }
+
+        .payments-table thead th {
+            background-color: #5863F8;
+            color: white;
+            font-weight: 600;
+            padding: 1.2rem 1rem;
+            vertical-align: middle;
+            border-bottom: none;
+        }
+
+        .payments-table tbody tr {
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .payments-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .payments-table tbody tr:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .payments-table tbody td {
+            padding: 1rem 1rem;
+            vertical-align: middle;
+            color: #343a40;
+            font-size: 0.95rem;
+        }
+
+        /* Estilo para el mensaje de "no pagos" */
+        .no-payments-alert {
+            font-size: 1.2rem;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background-color: #e0f7fa;
+            color: #006064;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 3rem;
+            border: 1px solid #b2ebf2;
+        }
+
+        .no-payments-alert .bi {
+            font-size: 3.5rem;
+            color: #00bcd4;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-payments-alert h3 {
+            font-weight: 600;
+            color: #004d40;
+        }
+
+        .no-payments-alert p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .no-payments-alert .btn-action {
+            font-size: 1.1rem;
+            padding: 0.75rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            background-color: #00bcd4;
+            border-color: #00bcd4;
+            color: white;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .no-payments-alert .btn-action:hover {
+            background-color: #0097a7;
+            border-color: #00838f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .payments-table thead th, .payments-table tbody td {
+                padding: 0.8rem 0.6rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .table-responsive {
+                border: 1px solid #dee2e6;
+                border-radius: 1rem;
+                overflow-x: auto;
+            }
+
+            .payments-table {
+                width: 100%;
+                min-width: 700px;
+            }
+
+            .no-payments-alert {
+                padding: 1.5rem;
+                font-size: 1rem;
+            }
+
+            .no-payments-alert .bi {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<div layout:fragment="content" class="container mt-5">
-    <h2 class="mb-4">Historial de Pagos</h2>
+<div layout:fragment="content" class="container payments-container">
+    <h2 class="mb-5 text-center text-primary fw-bold">Historial de Mis Pagos</h2>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 
     <div th:if="${payments != null and !payments.isEmpty()}">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="table-dark">
+            <table class="table payments-table">
+                <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Fecha de Pago</th>
-                    <th>Comprobante</th>
-                    <th>Concepto</th>
-                    <th>Monto (S/)</th>
-                    <th>Tipo de Membresía</th>
-                    <th>Observaciones</th>
+                    <th scope="col">#</th>
+                    <th scope="col">Fecha de Pago</th>
+                    <th scope="col">N° Recibo</th>
+                    <th scope="col">Concepto</th>
+                    <th scope="col">Monto</th>
+                    <th scope="col">Membresía</th>
+                    <th scope="col">Observaciones</th>
+                    <th scope="col">Recibo Digital</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="p, iterStat : ${payments}">
                     <td th:text="${iterStat.index + 1}"></td>
-                    <td th:text="${#temporals.format(p.fechaPago, 'dd/MM/yyyy HH:mm')}"></td>
-                    <td th:text="${p.numeroComprobante}"></td>
-                    <td th:text="${p.concepto}"></td>
-                    <td th:text="${p.montoPago}"></td>
-                    <td th:text="${p.membershipType.membershipName}"></td>
-                    <td th:text="${p.observaciones}"></td>
+                    <td th:text="${#temporals.format(p.paymentDate, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${p.receiptNumber}"></td>
+                    <td th:text="${p.concept}"></td>
+                    <td th:text="${#numbers.formatCurrency(p.paymentAmount)}"></td>
+                    <td>
+                        <span th:text="${p.membershipType != null ? p.membershipType.membershipName : 'N/A'}"></span>
+                    </td>
+                    <td th:text="${p.observations}"></td>
+                    <td>
+                        <a th:if="${p.receipt != null and !p.receipt.isEmpty()}"
+                           th:href="${p.receipt}" target="_blank" class="btn btn-sm btn-outline-info">
+                            <i class="bi bi-file-earmark-arrow-down"></i> Ver
+                        </a>
+                        <span th:unless="${p.receipt != null and !p.receipt.isEmpty()}">No disponible</span>
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <div th:if="${payments == null or payments.isEmpty()}">
-        <div class="alert alert-info" role="alert">
-            No tienes pagos registrados hasta el momento.
-        </div>
+    <div th:if="${payments == null or payments.isEmpty()}" class="no-payments-alert mx-auto" style="max-width: 700px;">
+        <i class="bi bi-info-circle-fill"></i>
+        <h3 class="mb-2">¡Aún no tienes pagos registrados!</h3>
+        <p class="text-muted text-center">Cuando adquieras una membresía o realices cualquier otro pago, aparecerá
+            aquí.</p>
+        <a th:href="@{/client/memberships}" class="btn btn-info btn-action">
+            <i class="bi bi-grid-fill me-2"></i> Explorar Planes de Membresía
+        </a>
     </div>
 </div>
 </body>
