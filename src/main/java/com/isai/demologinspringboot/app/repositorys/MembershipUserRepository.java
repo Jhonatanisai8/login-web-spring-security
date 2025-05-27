@@ -5,9 +5,13 @@ import com.isai.demologinspringboot.app.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface MembershipUserRepository extends JpaRepository<MembershipUser, Integer> {
     Optional<MembershipUser> findByUserAndStatus(User user, Boolean status);
+
+    List<MembershipUser> findByUser(User user);
+
 }

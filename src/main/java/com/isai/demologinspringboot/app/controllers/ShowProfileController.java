@@ -60,19 +60,15 @@ public class ShowProfileController {
     }
 
 
-    @GetMapping("/membership")
-    public String showCurrentMembership(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    @GetMapping("/my_memberships")
+    public String showAllUserMemberships(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         User user = userRepository.findByUserName(userDetails.getUsername())
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        MembershipUser membershipUser = membershipUserService
-                .findByUserAndStatus(user, true)
-                .orElse(null);
-
-        model.addAttribute("userMembership", membershipUser);
+        List<MembershipUser> userMemberships = membershipUserService.findAllByUser(user);
+        model.addAttribute("userMemberships", userMemberships);
         return "client/my-membership";
     }
-
     @GetMapping("/my_payments")
     public String myPayments(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         User user = userRepository.findByUserName(userDetails.getUsername())

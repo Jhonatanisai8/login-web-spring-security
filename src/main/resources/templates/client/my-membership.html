@@ -5,102 +5,258 @@
       layout:decorate="~{layout.html}">
 <head>
     <meta charset="UTF-8">
-    <title>Mi Membresía</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Membresías</title>
+    <style layout:fragment="styles">
+        /* Estilos generales para el contenedor */
+        .memberships-list-container {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        /* Estilos de las tarjetas de membresía (adaptados del listado general) */
+        .membership-card {
+            border: none;
+            border-radius: 1.25rem;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .membership-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .membership-card-header {
+            background: linear-gradient(90deg, #5863F8 0%, #7c88ff 100%);
+            color: white;
+            padding: 1.25rem;
+            border-radius: 1.25rem 1.25rem 0 0;
+            position: relative;
+            text-align: center;
+        }
+        .membership-card-header h5 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .membership-status-badge {
+            font-size: 0.9rem;
+            padding: 0.4em 0.8em;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .membership-status-badge.bg-success { background-color: #28a745 !important; }
+        .membership-status-badge.bg-danger { background-color: #dc3545 !important; }
+        .membership-status-badge.bg-info { background-color: #17a2b8 !important; }
+
+        .membership-card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .membership-card-body p {
+            font-size: 0.95rem;
+            color: #6c757d;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .membership-card-body p strong {
+            color: #343a40;
+            font-weight: 600;
+        }
+        .membership-card-body p .bi {
+            font-size: 1.2rem;
+            color: #5863F8;
+        }
+
+        .membership-price-paid {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #28a745;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .membership-accesses-info {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #17a2b8;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .membership-accesses-info .bi {
+            color: #17a2b8;
+            margin-right: 0.5rem;
+        }
+
+
+        .membership-image {
+            height: 180px;
+            object-fit: cover;
+            border-radius: 0.75rem;
+            margin-top: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+
+        /* Estilo para el mensaje de no membresías */
+        .no-memberships-alert {
+            font-size: 1.2rem;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background-color: #e0f7fa;
+            color: #006064;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 3rem;
+            border: 1px solid #b2ebf2;
+        }
+        .no-memberships-alert .bi {
+            font-size: 4rem;
+            color: #00bcd4;
+            margin-bottom: 1rem;
+        }
+        .no-memberships-alert h3 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .no-memberships-alert p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            text-align: center;
+        }
+        .no-memberships-alert .btn-action {
+            font-size: 1.2rem;
+            padding: 0.8rem 2.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            background-color: #00bcd4;
+            border-color: #00bcd4;
+            color: white;
+            transition: all 0.2s ease-in-out;
+        }
+        .no-memberships-alert .btn-action:hover {
+            background-color: #0097a7;
+            border-color: #00838f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .membership-card-header h5 {
+                font-size: 1.3rem;
+            }
+            .membership-card-body p {
+                font-size: 0.9rem;
+            }
+            .membership-price-paid {
+                font-size: 1.5rem;
+            }
+            .membership-accesses-info {
+                font-size: 1rem;
+            }
+            .no-memberships-alert {
+                padding: 1.5rem;
+                font-size: 1rem;
+            }
+            .no-memberships-alert .bi {
+                font-size: 3rem;
+            }
+            .no-memberships-alert h3 {
+                font-size: 1.5rem;
+            }
+            .no-memberships-alert p {
+                font-size: 1rem;
+            }
+            .no-memberships-alert .btn-action {
+                font-size: 1rem;
+                padding: 0.6rem 1.8rem;
+            }
+        }
+        @media (max-width: 576px) {
+            .g-4 {
+                grid-gap: 1rem;
+            }
+            .membership-card-header {
+                padding: 1rem;
+            }
+            .membership-card-header h5 {
+                font-size: 1.2rem;
+            }
+            .membership-status-badge {
+                font-size: 0.8rem;
+                padding: 0.3em 0.6em;
+            }
+            .membership-card-body {
+                padding: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<div layout:fragment="content">
-    <div class="container my-5">
-        <h2 class="text-center mb-4">Mi Membresía</h2>
+<div layout:fragment="content" class="container memberships-list-container">
+    <h1 class="text-center mb-5 text-primary fw-bold">Historial de Mis Membresías</h1>
 
-        <div th:if="${userMembership != null}">
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0" th:text="${userMembership.membershipType.membershipName}">Nombre Membresía</h5>
-                    <span class="badge bg-light text-success"
-                          th:text="${userMembership.status ? 'Activa' : 'Inactiva'}"></span>
+    <div th:if="${userMemberships != null and !userMemberships.isEmpty()}" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        <div class="col" th:each="mu : ${userMemberships}">
+            <div class="card membership-card">
+                <div class="membership-card-header">
+                    <h5 th:text="${mu.membershipType != null ? mu.membershipType.membershipName : 'Membresía Desconocida'}">Nombre Membresía</h5>
+                    <span th:classappend="${mu.status} ? 'bg-success' : 'bg-danger'" class="badge membership-status-badge">
+                        <i th:classappend="${mu.status} ? 'bi bi-check-circle-fill' : 'bi bi-x-circle-fill'" class="bi me-1"></i>
+                        <span th:text="${mu.status ? 'Activa' : 'Inactiva'}"></span>
+                    </span>
                 </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <strong>Código:</strong> <span
-                                th:text="${userMembership.membershipType.membershipCode}"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>Duración (días):</strong> <span
-                                th:text="${userMembership.membershipType.durationDays}"></span>
-                        </div>
-                    </div>
+                <div class="membership-card-body">
+                    <p><i class="bi bi-calendar-check"></i> <strong>Inicio:</strong> <span th:text="${#temporals.format(mu.startDate, 'dd/MM/yyyy')}"></span></p>
+                    <p><i class="bi bi-calendar-x"></i> <strong>Fin:</strong> <span th:text="${#temporals.format(mu.endDate, 'dd/MM/yyyy')}"></span></p>
+                    <p><i class="bi bi-person-up"></i> <strong>Accesos Mensuales:</strong> <span th:text="${mu.membershipType != null ? mu.membershipType.monthlyAccesses : 'N/A'}"></span></p>
+                    <p><i class="bi bi-door-open-fill"></i> <strong>Accesos Restantes:</strong> <span th:text="${mu.remainingAccesses}"></span></p>
+                    <p><i class="bi bi-arrow-repeat"></i> <strong>Renovación Automática:</strong> <span th:text="${mu.automaticRenewal ? 'Sí' : 'No'}"></span></p>
+                    <p><i class="bi bi-currency-dollar"></i> <strong>Precio Pagado:</strong> <span th:text="${#numbers.formatCurrency(mu.pricePaid)}"></span></p>
+                    <p th:if="${mu.lastRenewalDate != null}"><i class="bi bi-calendar-event"></i> <strong>Última Renovación:</strong> <span th:text="${#temporals.format(mu.lastRenewalDate, 'dd/MM/yyyy')}"></span></p>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <strong>Inicio:</strong> <span th:text="${userMembership.startDate}"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>Fin:</strong> <span th:text="${userMembership.endDate}"></span>
-                        </div>
-                    </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <strong>Precio Pagado:</strong> S/. <span th:text="${userMembership.pricePaid}"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>Accesos Restantes:</strong> <span
-                                th:text="${userMembership.remainingAccesses}"></span>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <strong>Accesos Mensuales:</strong> <span
-                                th:text="${userMembership.membershipType.monthlyAccesses}"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>Renovación Automática:</strong>
-                            <span th:text="${userMembership.automaticRenewal ? 'Sí' : 'No'}"></span>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <strong>Última Renovación:</strong> <span
-                                th:text="${userMembership.lastRenewalDate}"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>Fecha de Registro:</strong> <span
-                                th:text="${userMembership.membershipType.creationDate}"></span>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <strong>Beneficios:</strong>
-                        <p class="mb-0" th:text="${userMembership.membershipType.benefits}"></p>
-                    </div>
-
-                    <div class="mb-3">
-                        <strong>Restricciones:</strong>
-                        <p class="mb-0" th:text="${userMembership.membershipType.restrictionsMembershipType}"></p>
-                    </div>
-
-                    <div class="mb-3">
-                        <strong>Descripción:</strong>
-                        <p class="mb-0" th:text="${userMembership.membershipType.description}"></p>
-                    </div>
-
-                    <div class="text-center" th:if="${userMembership.membershipType.pathImageProfile != null}">
-                        <img class="img-fluid rounded mt-3"
-                             style="max-height: 200px;"
-                             th:src="@{/assets/{filename}(filename=${userMembership.membershipType.pathImageProfile})}"
-                             alt="Imagen de la Membresía"/>
+                    <div class="text-center mt-auto"> <img th:if="${mu.membershipType != null and mu.membershipType.pathImageProfile != null and !mu.membershipType.pathImageProfile.isEmpty()}"
+                                                           th:src="@{/assets/{filename}(filename=${mu.membershipType.pathImageProfile})}"
+                                                           th:alt="${mu.membershipType.membershipName + ' imagen'}"
+                                                           class="img-fluid membership-image"/>
+                        <p th:unless="${mu.membershipType != null and mu.membershipType.pathImageProfile != null and !mu.membershipType.pathImageProfile.isEmpty()}" class="text-muted small mt-2">
+                            Imagen no disponible
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div th:if="${userMembership == null}" class="alert alert-warning text-center" role="alert">
-            <p class="mb-0">No tienes una membresía activa actualmente.</p>
-        </div>
     </div>
+
+    <div th:if="${userMemberships == null or userMemberships.isEmpty()}" class="no-memberships-alert mx-auto" style="max-width: 700px;">
+        <i class="bi bi-info-circle-fill"></i>
+        <h3>¡Aún no tienes membresías registradas!</h3>
+        <p>Parece que no hay historial de membresías para tu cuenta. ¡Comienza a disfrutar de nuestros beneficios adquiriendo un plan!</p>
+        <a th:href="@{/client/memberships}" class="btn btn-info btn-action">
+            <i class="bi bi-grid-fill me-2"></i> Explorar Planes de Membresía
+        </a>
+    </div>
+
 </div>
 </body>
 </html>

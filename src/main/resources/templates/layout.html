@@ -39,7 +39,7 @@
                     <a class="nav-link text-secondary" th:href="@{/client/profile}">Mi Perfil</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('USER')">
-                    <a class="nav-link text-secondary" th:href="@{/client/membership}">Mi Membresia</a>
+                    <a class="nav-link text-secondary" th:href="@{/client/my_memberships}">Mis Membresia</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('USER')">
                     <a class="nav-link text-secondary" th:href="@{/client/my_payments}">Mis Pagos</a>
