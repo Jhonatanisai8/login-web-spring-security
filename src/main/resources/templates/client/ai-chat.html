@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Asistente de IA</title>
+    <style>
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            min-height: 70vh;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #5863F8, #7c88ff);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 1.5rem 1.5rem 0 0;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .chat-header .bi {
+            font-size: 2.2rem;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1.5rem 2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            scroll-behavior: smooth;
+            max-height: 60vh; /* Añadido para controlar altura máxima */
+        }
+
+        .message-bubble {
+            max-width: 75%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            word-wrap: break-word;
+            font-size: 1.05rem;
+            line-height: 1.4;
+            position: relative; /* Para posicionar mejor el tiempo */
+        }
+
+        .message-user {
+            background-color: #e3f2fd;
+            color: #212529;
+            align-self: flex-end;
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        .message-ai {
+            background-color: #f0f0f5;
+            color: #212529;
+            align-self: flex-start;
+            border-bottom-left-radius: 0.25rem;
+            font-weight: bold;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 0.25rem;
+            text-align: right;
+            display: block;
+        }
+
+        .message-ai .message-time {
+            text-align: left;
+        }
+
+        .chat-input-area {
+            border-top: 1px solid #e0e0e0;
+            padding: 1.5rem 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end; /* Cambiado de center a flex-end para mejor alineación */
+            border-radius: 0 0 1.5rem 1.5rem;
+            background-color: #ffffff; /* Añadido fondo explícito */
+        }
+
+        .chat-input-area textarea {
+            flex-grow: 1;
+            border-radius: 0.75rem;
+            border: 1px solid #ced4da;
+            padding: 0.75rem 1rem;
+            resize: none;
+            min-height: 45px;
+            max-height: 120px;
+            overflow-y: auto;
+            font-size: 1rem;
+            font-family: inherit; /* Asegurar consistencia de fuente */
+            line-height: 1.4; /* Mejor espaciado */
+        }
+
+        .chat-input-area textarea:focus {
+            border-color: #5863F8;
+            box-shadow: 0 0 0 0.25rem rgba(88, 99, 248, 0.25);
+            outline: none; /* Remover outline por defecto */
+        }
+
+        .chat-input-area button {
+            background-color: #5863F8;
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.25rem;
+            color: white;
+            font-size: 1.1rem;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            cursor: pointer; /* Añadido cursor pointer */
+            min-width: 100px; /* Ancho mínimo para consistencia */
+        }
+
+        .chat-input-area button:hover:not(:disabled) { /* Mejorado hover */
+            background-color: #4a54d4;
+            transform: translateY(-2px);
+        }
+
+        .chat-input-area button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            opacity: 0.6; /* Añadido para mejor feedback visual */
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            margin: 1rem 0; /* Mejorado margen */
+            padding: 0 2rem; /* Añadido padding lateral */
+        }
+
+        .loading-spinner.active {
+            display: block;
+        }
+
+        /* Mejorado el spinner */
+        .spinner-border {
+            width: 2rem;
+            height: 2rem;
+            border-width: 0.25em;
+        }
+
+        .loading-spinner p {
+            margin-top: 0.5rem;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .chat-container {
+                margin: 1.5rem;
+                border-radius: 1rem;
+                min-height: 80vh;
+            }
+
+            .chat-header {
+                padding: 1rem 1.5rem;
+                font-size: 1.5rem;
+                border-radius: 1rem 1rem 0 0;
+            }
+
+            .chat-header .bi {
+                font-size: 1.8rem;
+            }
+
+            .chat-messages {
+                padding: 1rem 1.5rem;
+                gap: 0.75rem;
+                max-height: 65vh; /* Ajustado para móvil */
+            }
+
+            .message-bubble {
+                padding: 0.6rem 0.9rem;
+                font-size: 0.95rem;
+                max-width: 85%; /* Más ancho en móvil */
+            }
+
+            .chat-input-area {
+                padding: 1rem 1.5rem;
+                gap: 0.75rem;
+                border-radius: 0 0 1rem 1rem;
+            }
+
+            .chat-input-area textarea {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .chat-input-area button {
+                padding: 0.6rem 1rem;
+                font-size: 1rem;
+                min-width: 80px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .chat-container {
+                margin: 1rem 0.5rem;
+                min-height: 85vh;
+            }
+
+            .chat-header {
+                font-size: 1.3rem;
+                padding: 0.75rem 1rem;
+            }
+
+            .chat-header .bi {
+                font-size: 1.5rem;
+            }
+
+            .chat-messages {
+                padding: 0.75rem 1rem;
+                gap: 0.5rem;
+                max-height: 70vh;
+            }
+
+            .message-bubble {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
+                max-width: 90%;
+            }
+
+            .chat-input-area {
+                padding: 0.75rem 1rem;
+                gap: 0.5rem;
+            }
+
+            .chat-input-area textarea {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
+            }
+
+            .chat-input-area button {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.9rem;
+                min-width: 70px;
+            }
+        }
+
+        /* Estilos adicionales para mejor UX */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="container memberships-list-container">
+    <div class="chat-container">
+        <div class="chat-header">
+            <i class="bi bi-robot"></i> Asistente IA
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <b>
+                <div class="message-bubble message-ai">
+                    ¡Hola! Soy tu asistente de IA. ¿En qué puedo ayudarte hoy?
+                    <span class="message-time" th:text="${#dates.format(#dates.createNow(), 'HH:mm')}"></span>
+                </div>
+            </b>
+        </div>
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="text-muted">La IA está pensando...</p>
+        </div>
+        <div class="chat-input-area">
+            <textarea id="promptInput" rows="1" placeholder="Escribe tu mensaje aquí..."
+                      class="form-control"></textarea>
+            <button id="sendMessageBtn" class="btn btn-primary" type="button">
+                <i class="bi bi-send-fill me-1"></i> Enviar
+            </button>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="scripts">
+    // espera a que el DOM esté completamente cargado
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // referencias a elementos del DOM
+        const chatMessages = document.getElementById('chatMessages');
+        const promptInput = document.getElementById('promptInput');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        // función para mostrar mensajes en el chat
+        function addMessage(text, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message-bubble', `message-${type}`); // Estilo según el tipo (user o ai)
+
+            // Escapar caracteres peligrosos para evitar inyección HTML
+            const safeText = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+            // insertar texto y hora
+            messageDiv.innerHTML = `${safeText}<span class="message-time">${new Date().toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit'
+            })}</span>`;
+
+            // agregar el mensaje al contenedor y hacer scroll hacia abajo
+            chatMessages.appendChild(messageDiv);
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 100);
+        }
+
+        // función para enviar el mensaje al servidor y mostrar la respuesta de la IA
+        async function sendMessage() {
+            const promptMessage = promptInput.value.trim();
+            if (promptMessage === '') return; // no enviar si está vacío
+
+            addMessage(promptMessage, 'user'); // mostrar el mensaje del usuario
+            promptInput.value = ''; // limpiar campo
+            promptInput.style.height = 'auto'; // reiniciar altura del textarea
+            sendMessageBtn.disabled = true; // deshabilitar botón mientras se procesa
+            loadingSpinner.classList.add('active'); // mostrar spinner
+
+            try {
+                // realizar solicitud al backend con el mensaje
+                const response = await fetch(`/my-ai-service/api/ai/v1/generate?promptMessage=${encodeURIComponent(promptMessage)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'text/plain',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                });
+
+                if (!response.ok) {
+                    // si hay error, mostrar mensaje genérico
+                    const errorText = await response.text();
+                    console.error('Error de la IA:', response.status, errorText);
+                    addMessage('Lo siento, hubo un error al obtener la respuesta de la IA.', 'ai');
+                } else {
+                    // si todo va bien, mostrar la respuesta de la IA
+                    const aiResponse = await response.text();
+                    addMessage(aiResponse, 'ai');
+                }
+            } catch (error) {
+                // manejar errores de conexión
+                console.error('Excepción durante la solicitud:', error);
+                addMessage('Lo siento, no se pudo conectar con la IA en este momento.', 'ai');
+            } finally {
+                // restaurar estado de la interfaz
+                sendMessageBtn.disabled = false;
+                loadingSpinner.classList.remove('active');
+            }
+        }
+
+        // enviar mensaje al hacer clic en el botón
+        sendMessageBtn.addEventListener('click', sendMessage);
+
+        // permitir enviar mensaje con Enter (y salto de línea con Shift + Enter)
+        promptInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault(); // Evita salto de línea
+                sendMessage();
+            }
+        });
+
+        // ajustar altura del textarea dinámicamente según contenido
+        promptInput.addEventListener('input', function () {
+            this.style.height = 'auto'; // reinicia altura
+            this.style.height = (this.scrollHeight) + 'px'; // ajusta a contenido
+        });
+    });
+</script>
+</body>
+</html>
