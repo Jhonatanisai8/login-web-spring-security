@@ -38,51 +38,73 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    //cadenas de filtros de seguridad
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                // Habilitar CSRF si tu aplicación lo requiere
-                .csrf(AbstractHttpConfigurer::disable)  // O deshabilitar solo si es API (por ejemplo: .disable())
+                // Habilitar o deshabilitar CSRF según tu necesidad
+                .csrf(AbstractHttpConfigurer::disable)
+
                 // Configuración de rutas públicas y protegidas
                 .authorizeHttpRequests(authorizeRequests -> {
-                    // Definir rutas públicas (sin autenticación)
-                    authorizeRequests.requestMatchers("/admin", "/register**", "/login**", "/js/**", "/css/**", "/img/**")
-                            .permitAll();
+                    // Rutas públicas (accesibles sin login)
+                    authorizeRequests.requestMatchers(
+                            "/admin",
+                            "/register**",
+                            "/login**",
+                            "/js/**",
+                            "/css/**",
+                            "/img/**",
+                            "/my-ai-service/api/ai/v1/generate"  // <-- Ruta pública añadida
+                    ).permitAll();
+
+                    // Rutas que requieren autenticación
                     authorizeRequests.requestMatchers("/admin/**").authenticated();
                     authorizeRequests.requestMatchers("/client/**").authenticated();
-                    // Cualquier otra ruta necesita estar autenticado
+
+                    // Cualquier otra ruta también requiere autenticación
                     authorizeRequests.anyRequest().authenticated();
                 })
 
-                // Configurar login (personalizar con mensajes de error)
+                // Configuración de login personalizado
                 .formLogin(form -> form
-                        .loginPage("/login")    // Página de login personalizada
-                        .loginProcessingUrl("/login")  // URL de procesamiento de login
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
                         .permitAll()
-                        // Redirigir a una página con un mensaje si login falla
                         .failureUrl("/login?error=true")
-                        .defaultSuccessUrl("/", true) // Redirigir al home después de un login exitoso
+                        .defaultSuccessUrl("/", true)
                 )
 
-                // Configurar logout (aumentar seguridad y experiencia)
+                // Configuración de logout
                 .logout(logout -> logout
-                        .logoutUrl("/logout")    // URL para cerrar sesión
-                        .invalidateHttpSession(true)  // Invalidar sesión
-                        .clearAuthentication(true)   // Limpiar la autenticación
-                        .logoutSuccessUrl("/login?logout")   // Redirigir a login después de logout
+                        .logoutUrl("/logout")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 )
 
-                // Manejo de sesiones: Expirar sesiones después de un tiempo determinado
+                // Manejo de sesiones
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Solo crear sesión si es necesario
-                        .invalidSessionUrl("/login?invalid-session=true")   // Redirigir si la sesión es inválida
-                        .maximumSessions(1)  // Limitar la cantidad de sesiones por usuario
-                        .expiredUrl("/login?expired=true")  // Redirigir si la sesión expira
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .invalidSessionUrl("/login?invalid-session=true")
+                        .maximumSessions(1)
+                        .expiredUrl("/login?expired=true")
                 )
+
                 .build();
     }
 
-
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+//        return httpSecurity
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(authorizeRequests -> {
+//                    // Permitir TODO para este endpoint por ahora para depurar
+//                    authorizeRequests.requestMatchers("my-ai-service/api/ai/v1/generate").permitAll();
+//                    // Para todo lo demás, puedes mantener tu configuración original
+//                    authorizeRequests.anyRequest().authenticated(); // O si quieres, también .permitAll() temporalmente para ver si es algo más
+//                })
+//                // ... el resto de tu configuración (formLogin, logout, sessionManagement)
+//                .build();
+//    }
 }
